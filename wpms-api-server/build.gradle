@@ -1,0 +1,16 @@
+plugins {
+    id 'com.netflix.dgs.codegen' version '6.0.3'
+}
+
+dependencies {
+    implementation("org.springframework.boot:spring-boot-starter-web")
+    implementation "com.netflix.graphql.dgs:graphql-dgs-spring-boot-starter:latest.release"
+
+}
+
+generateJava {
+    schemaPaths = ["${projectDir}/src/main/resources/graphql-client"]
+    packageName = 'com.park.webpagemanagementsystem.codegen'
+    generateClient = true
+}
+

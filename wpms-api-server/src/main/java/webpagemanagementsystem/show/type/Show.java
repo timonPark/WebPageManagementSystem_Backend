@@ -1,4 +1,4 @@
-package com.park.webpagemanagementsystem.show.type;
+package webpagemanagementsystem.show.type;
 
 public class Show {
   private final String title;
