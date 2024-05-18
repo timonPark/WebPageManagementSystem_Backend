@@ -1,0 +1,17 @@
+version: "1.0"
+
+services:
+  postgres_db:
+    image: postgres:16
+    restart: always
+    volumes:
+      - ./postgres-data:/var/lib/postgresql/data
+    container_name: wpms_postgres
+    environment:
+      POSTGRES_USER: wpms
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: wpms
+    ports:
+      - "19999:5432"
+    expose:
+      - "19999"
