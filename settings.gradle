@@ -1,1 +1,4 @@
 rootProject.name = 'WebPageManagementSystem'
+include 'wpms-core'
+include 'wpms-api-server'
+

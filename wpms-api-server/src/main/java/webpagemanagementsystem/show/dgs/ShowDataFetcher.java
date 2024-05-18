@@ -1,11 +1,12 @@
-package com.park.webpagemanagementsystem.show.dgs;
+package webpagemanagementsystem.show.dgs;
 
 import com.netflix.graphql.dgs.DgsComponent;
 import com.netflix.graphql.dgs.DgsQuery;
 import com.netflix.graphql.dgs.InputArgument;
-import com.park.webpagemanagementsystem.show.type.Show;
+
 import java.util.List;
 import java.util.stream.Collectors;
+import webpagemanagementsystem.show.type.Show;
 
 @DgsComponent
 public class ShowDataFetcher {
