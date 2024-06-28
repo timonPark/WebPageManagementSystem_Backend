@@ -37,3 +37,6 @@ out/
 .vscode/
 
 /docker/postgres/postgres-data
+
+### application 설정 파일 ###
+application.yml
