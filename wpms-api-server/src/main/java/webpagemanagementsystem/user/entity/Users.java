@@ -7,6 +7,8 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.ColumnDefault;
@@ -16,7 +18,9 @@ import webpagemanagementsystem.common.entity.YNEnum;
 
 @Entity
 @Getter
+@Builder
 @NoArgsConstructor
+@AllArgsConstructor
 public class Users extends BaseTimeEntity {
 
     @Id
@@ -37,6 +41,9 @@ public class Users extends BaseTimeEntity {
     @Enumerated(EnumType.STRING)
     private YNEnum isSocial;
 
+    @Column(length = 30, nullable = true)
+    private String socialId;
+
     @Column(nullable = true)
     @Enumerated(EnumType.STRING)
     private SocialType socialType;
@@ -47,8 +54,6 @@ public class Users extends BaseTimeEntity {
     @Column(length = 1, nullable = false)
     @ColumnDefault("'Y'")
     @Enumerated(EnumType.STRING)
-    private IsUseEnum isUseEnum;
-
-
+    private IsUseEnum isUse;
 
 }
