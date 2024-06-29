@@ -3,6 +3,8 @@ package webpagemanagementsystem.user.repository;
 
 import static org.assertj.core.api.Assertions.*;
 
+import java.util.NoSuchElementException;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,6 +44,42 @@ class UsersRepositoryTest {
         // then
         assertThat(user).isEqualTo(resultUser);
         assertThat(resultUser.getCreatedAt()).isNotNull();
+    }
+
+    @DisplayName("email로_Users_객체조회_실패")
+    @Test
+    public void test2(){
+        // given
+        String email = "m11111@naver.com";
+
+        // when & then
+        Assertions.assertThrows(NoSuchElementException.class, () -> {
+            userRepository.findByEmail(email).stream().findFirst().orElseThrow();
+        });
+    }
+
+    @Transactional
+    @DisplayName("email로_Users_객체조회_성공")
+    @Test
+    public void test3(){
+        // given
+        String email = "m11111@naver.com";
+        Users user = userRepository.save(Users.builder()
+                .name("박종훈")
+                .email(email)
+                .password(null)
+                .isSocial(YNEnum.U)
+                .socialId("18346737826")
+                .socialType(SocialType.KAKAO)
+                .picture(null)
+                .isUse(IsUseEnum.U)
+                .build());
+
+        // when
+        Users resultUser = userRepository.findByEmail(email).stream().findFirst().orElseThrow();
+
+        // then
+        assertThat(user.getUserNo()).isEqualTo(resultUser.getUserNo());
     }
 
 }
