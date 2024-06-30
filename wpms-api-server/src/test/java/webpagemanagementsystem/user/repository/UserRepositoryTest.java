@@ -16,7 +16,7 @@ import webpagemanagementsystem.user.entity.SocialType;
 import webpagemanagementsystem.user.entity.Users;
 
 @SpringBootTest
-class UsersRepositoryTest {
+class UserRepositoryTest {
 
     @Autowired
     UsersRepository userRepository;
@@ -54,7 +54,7 @@ class UsersRepositoryTest {
 
         // when & then
         Assertions.assertThrows(NoSuchElementException.class, () -> {
-            userRepository.findByEmail(email).stream().findFirst().orElseThrow();
+            userRepository.findByEmailAndIsUse(email, IsUseEnum.U).stream().findFirst().orElseThrow();
         });
     }
 
@@ -76,7 +76,7 @@ class UsersRepositoryTest {
                 .build());
 
         // when
-        Users resultUser = userRepository.findByEmail(email).stream().findFirst().orElseThrow();
+        Users resultUser = userRepository.findByEmailAndIsUse(email, IsUseEnum.U).stream().findFirst().orElseThrow();
 
         // then
         assertThat(user.getUserNo()).isEqualTo(resultUser.getUserNo());

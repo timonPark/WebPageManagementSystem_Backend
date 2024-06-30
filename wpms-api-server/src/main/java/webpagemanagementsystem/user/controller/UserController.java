@@ -1,24 +1,33 @@
 package webpagemanagementsystem.user.controller;
 
-import java.net.URI;
-
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
+import java.util.NoSuchElementException;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.util.MultiValueMap;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.client.RestTemplate;
-import org.springframework.web.util.UriComponentsBuilder;
 import webpagemanagementsystem.user.dto.UserLoginRequestDto;
 import webpagemanagementsystem.user.dto.UserLoginResponseDto;
+import webpagemanagementsystem.user.service.UserService;
 
 @RestController
 @RequestMapping("/user")
+@RequiredArgsConstructor
 public class UserController {
+
+    private final UserService userService;
+
+    @GetMapping("/email/{email}")
+    public ResponseEntity findByEmail(@PathVariable("email") String email) {
+        try {
+            return ResponseEntity.ok(userService.convertUsersToFindByEmailResponse(userService.findByEmail(email)));
+        } catch (NoSuchElementException e) {
+            return ResponseEntity.badRequest().body("Not Found User");
+        }
+    }
 
     @PostMapping("/kakao")
     public ResponseEntity<UserLoginResponseDto> kakaoLogin(@RequestBody UserLoginRequestDto userLoginRequestDto) {
