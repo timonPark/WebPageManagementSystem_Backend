@@ -16,6 +16,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public Users findByEmail(String email) {
+        var test1 = usersRepository.findByEmailAndIsUse(email, IsUseEnum.U);
         return usersRepository.findByEmailAndIsUse(email, IsUseEnum.U).stream().findFirst()
                 .orElseThrow(() -> new NoSuchElementException());
     }

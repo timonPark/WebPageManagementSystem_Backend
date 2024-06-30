@@ -6,7 +6,5 @@ import webpagemanagementsystem.common.entity.IsUseEnum;
 import webpagemanagementsystem.user.entity.Users;
 
 public interface UsersRepository extends JpaRepository<Users, Long> {
-
-    public List<Users> findByEmail(String email);
     public List<Users> findByEmailAndIsUse(String email, IsUseEnum isUse);
 }

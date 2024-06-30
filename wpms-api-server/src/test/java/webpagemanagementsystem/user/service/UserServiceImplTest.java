@@ -1,6 +1,8 @@
 package webpagemanagementsystem.user.service;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.NoSuchElementException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
@@ -34,7 +36,7 @@ class UserServiceImplTest {
         // given
         String email = "m11111@naver.com";
 
-        given(usersRepository.findByEmail(email)).willThrow(new NoSuchElementException());
+        given(usersRepository.findByEmailAndIsUse(email, IsUseEnum.U)).willThrow(new NoSuchElementException());
 
         // when & then
         Assertions.assertThrows(NoSuchElementException.class, () -> {
@@ -57,7 +59,9 @@ class UserServiceImplTest {
                 .picture(null)
                 .isUse(IsUseEnum.U)
                 .build();
-        given(usersRepository.findByEmail(email)).willReturn(Arrays.asList(user));
+        List<Users> list = new ArrayList<>();
+        list.add(user);
+        given(usersRepository.findByEmailAndIsUse(email, IsUseEnum.U)).willReturn(list);
 
         // when
         Users resultUser = userService.findByEmail(email);
