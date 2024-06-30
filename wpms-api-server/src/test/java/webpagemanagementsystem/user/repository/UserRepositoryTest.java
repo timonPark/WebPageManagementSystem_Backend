@@ -16,7 +16,7 @@ import webpagemanagementsystem.user.entity.SocialType;
 import webpagemanagementsystem.user.entity.Users;
 
 @SpringBootTest
-class UsersRepositoryTest {
+class UserRepositoryTest {
 
     @Autowired
     UsersRepository userRepository;
