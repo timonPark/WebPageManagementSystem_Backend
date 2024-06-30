@@ -49,7 +49,7 @@ public class Users extends BaseTimeEntity {
     private SocialType socialType;
 
     @Column(length = 200, nullable = true)
-    String picture;
+    private String picture;
 
     @Column(length = 1, nullable = false)
     @ColumnDefault("'Y'")
