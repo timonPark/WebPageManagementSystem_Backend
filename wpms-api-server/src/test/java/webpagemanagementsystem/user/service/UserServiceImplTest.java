@@ -13,6 +13,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import webpagemanagementsystem.common.entity.IsUseEnum;
 import webpagemanagementsystem.common.entity.YNEnum;
+import webpagemanagementsystem.user.dto.FindByEmailResponse;
 import webpagemanagementsystem.user.entity.SocialType;
 import webpagemanagementsystem.user.entity.Users;
 import webpagemanagementsystem.user.repository.UsersRepository;
@@ -39,9 +40,9 @@ class UserServiceImplTest {
         given(usersRepository.findByEmailAndIsUse(email, IsUseEnum.U)).willThrow(new NoSuchElementException());
 
         // when & then
-        Assertions.assertThrows(NoSuchElementException.class, () -> {
-            userService.findByEmail(email);
-        });
+        Users result = userService.findByEmail(email);
+
+        assertThat(result).isNull();
     }
 
     @DisplayName("UsersService email로_Users_객체조회_성공")
@@ -53,9 +54,9 @@ class UserServiceImplTest {
                 .name("박종훈")
                 .email(email)
                 .password(null)
-                .isSocial(YNEnum.U)
+                .isSocial(YNEnum.Y)
                 .socialId("18346737826")
-                .socialType(SocialType.KAKAO)
+                .socialType(SocialType.kakao)
                 .picture(null)
                 .isUse(IsUseEnum.U)
                 .build();
@@ -68,5 +69,45 @@ class UserServiceImplTest {
 
         // then
         assertThat(resultUser).isEqualTo(user);
+    }
+
+    @DisplayName("convertUsersToFindByEmailResponse의 파라미터가 null 인 경우")
+    @Test
+    public void test3(){
+
+
+        // when
+        FindByEmailResponse findByEmailResponse = userService.convertUsersToFindByEmailResponse(null);
+
+        // then
+        assertThat(findByEmailResponse).isEqualTo(null);
+    }
+
+    @DisplayName("convertUsersToFindByEmailResponse의 파라미터가 null이 아닌 경우")
+    @Test
+    public void test4(){
+        // given
+        String email = "m11111@naver.com";
+        Users user = Users.builder()
+            .name("박종훈")
+            .email(email)
+            .password(null)
+            .isSocial(YNEnum.Y)
+            .socialId("18346737826")
+            .socialType(SocialType.kakao)
+            .picture(null)
+            .isUse(IsUseEnum.U)
+            .build();
+        List<Users> list = new ArrayList<>();
+        list.add(user);
+        given(usersRepository.findByEmailAndIsUse(email, IsUseEnum.U)).willReturn(list);
+        FindByEmailResponse findByEmailResponse = new FindByEmailResponse(user);
+
+        // when
+        Users resultUser = userService.findByEmail(email);
+        FindByEmailResponse resultFindByEmailResponse = userService.convertUsersToFindByEmailResponse(resultUser);
+
+        // then
+        assertThat(resultFindByEmailResponse).isEqualTo(findByEmailResponse);
     }
 }
