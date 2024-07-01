@@ -16,13 +16,17 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public Users findByEmail(String email) {
-        var test1 = usersRepository.findByEmailAndIsUse(email, IsUseEnum.U);
-        return usersRepository.findByEmailAndIsUse(email, IsUseEnum.U).stream().findFirst()
+        try {
+            return usersRepository.findByEmailAndIsUse(email, IsUseEnum.U).stream().findFirst()
                 .orElseThrow(() -> new NoSuchElementException());
+        } catch(NoSuchElementException e) {
+            return null;
+        }
+
     }
 
     @Override
     public FindByEmailResponse convertUsersToFindByEmailResponse(Users user) {
-        return new FindByEmailResponse(user);
+        return user != null ? new FindByEmailResponse(user) : null;
     }
 }

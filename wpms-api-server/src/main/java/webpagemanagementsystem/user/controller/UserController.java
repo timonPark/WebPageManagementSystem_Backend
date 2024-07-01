@@ -22,11 +22,7 @@ public class UserController {
 
     @GetMapping("/email/{email}")
     public ResponseEntity findByEmail(@PathVariable("email") String email) {
-        try {
-            return ResponseEntity.ok(userService.convertUsersToFindByEmailResponse(userService.findByEmail(email)));
-        } catch (NoSuchElementException e) {
-            return ResponseEntity.badRequest().body("Not Found User");
-        }
+        return ResponseEntity.ok(userService.convertUsersToFindByEmailResponse(userService.findByEmail(email)));
     }
 
     @PostMapping("/kakao")

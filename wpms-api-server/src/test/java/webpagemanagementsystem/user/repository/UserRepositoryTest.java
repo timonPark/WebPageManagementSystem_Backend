@@ -31,9 +31,9 @@ class UserRepositoryTest {
                 .name("박종훈")
                 .email(email)
                 .password(null)
-                .isSocial(YNEnum.U)
+                .isSocial(YNEnum.Y)
                 .socialId("18346737826")
-                .socialType(SocialType.KAKAO)
+                .socialType(SocialType.kakao)
                 .picture(null)
                 .isUse(IsUseEnum.U)
                 .build();
@@ -68,9 +68,9 @@ class UserRepositoryTest {
                 .name("박종훈")
                 .email(email)
                 .password(null)
-                .isSocial(YNEnum.U)
+                .isSocial(YNEnum.Y)
                 .socialId("18346737826")
-                .socialType(SocialType.KAKAO)
+                .socialType(SocialType.kakao)
                 .picture(null)
                 .isUse(IsUseEnum.U)
                 .build());

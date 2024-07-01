@@ -41,13 +41,12 @@ class UserControllerTest {
         // given
         String email = "m11111@naver.com2";
 
-        given(userService.findByEmail(email)).willThrow(new NoSuchElementException());
+        given(userService.findByEmail(email)).willReturn(null);
         // when
 
         // then
         mvc.perform(get("/user/email/"+ email))
-            .andExpect(status().is4xxClientError())
-            .andExpect(content().string("Not Found User"));
+            .andExpect(status().is2xxSuccessful());
     }
 
     @DisplayName("User API 중 이메일로 계정 검색 실패")
@@ -60,9 +59,9 @@ class UserControllerTest {
             .name("박종훈")
             .email(email)
             .password(null)
-            .isSocial(YNEnum.U)
+            .isSocial(YNEnum.Y)
             .socialId("18346737826")
-            .socialType(SocialType.KAKAO)
+            .socialType(SocialType.kakao)
             .picture("")
             .isUse(IsUseEnum.U)
             .build();
