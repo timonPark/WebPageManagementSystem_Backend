@@ -20,3 +20,8 @@ spring:
 logging:
   level:
     org.hibernate.SQL: debug
+social:
+  platform:
+    kakao:
+      base-url: https://kapi.kakao.com
+      path-url: /v2/user/me
