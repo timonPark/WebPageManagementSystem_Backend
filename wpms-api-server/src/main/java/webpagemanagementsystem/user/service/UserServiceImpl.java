@@ -17,7 +17,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 import webpagemanagementsystem.common.entity.IsUseEnum;
 import webpagemanagementsystem.common.variable.SocialProperties;
 import webpagemanagementsystem.user.dto.FindByEmailResponse;
-import webpagemanagementsystem.user.dto.KakaoSocialInfo;
+import webpagemanagementsystem.user.domain.KakaoSocialInfo;
 import webpagemanagementsystem.user.entity.Users;
 import webpagemanagementsystem.user.exception.SocialUnauthorizedException;
 import webpagemanagementsystem.user.repository.UsersRepository;
@@ -50,14 +50,17 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public Users createUser(Users user) {
-        return null;
+        return usersRepository.save(user);
     }
 
     @Override
-    public Users joinKakaoSocial(String accessToken) throws SocialUnauthorizedException {
+    public String joinKakaoSocial(String accessToken) throws SocialUnauthorizedException {
         var socialInfo = getSocialInfo("kakao", accessToken, socialProperties.platform.get("kakao").getBaseUrl(), socialProperties.platform.get("kakao").getPathUrl());
         final KakaoSocialInfo kakaoSocialInfo = convertHashMapToGeneric(socialInfo, KakaoSocialInfo.class);
-        return null;
+        createUser(kakaoSocialInfo.convertKakaoSocialInfoToUsers());
+
+        return "";
+
     }
 
     @Override
@@ -70,7 +73,8 @@ public class UserServiceImpl implements UserService {
         return null;
     }
 
-    private <T> T convertHashMapToGeneric(Map<String, Object> socialInfo, Class<T> classType) {
+    @Override
+    public <T> T convertHashMapToGeneric(Map<String, Object> socialInfo, Class<T> classType) {
         final ObjectMapper mapper = objectMapper;
         return mapper.convertValue(socialInfo, classType);
     }

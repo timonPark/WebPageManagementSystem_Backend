@@ -14,9 +14,11 @@ public interface UserService {
     public Map<String, Object> getSocialInfo(String provider, String accessToken, String baseSocaiUrl, String baseSocaiPathUrl)
         throws SocialUnauthorizedException;
 
-    public Users joinKakaoSocial(String accessToken) throws SocialUnauthorizedException;
+    public String joinKakaoSocial(String accessToken) throws SocialUnauthorizedException;
 
     public Users joinNaverSocial(String accessToken);
 
     public Users joinGoogleSocial(String accessToken);
+
+    public <T> T convertHashMapToGeneric(Map<String, Object> socialInfo, Class<T> classType);
 }
