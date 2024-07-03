@@ -2,7 +2,6 @@ package webpagemanagementsystem.user.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
@@ -14,12 +13,11 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.web.client.HttpClientErrorException;
 import webpagemanagementsystem.common.entity.IsUseEnum;
 import webpagemanagementsystem.common.entity.YNEnum;
 import webpagemanagementsystem.common.variable.SocialProperties;
 import webpagemanagementsystem.user.dto.FindByEmailResponse;
-import webpagemanagementsystem.user.dto.KakaoSocialInfo;
+import webpagemanagementsystem.user.domain.KakaoSocialInfo;
 import webpagemanagementsystem.user.entity.SocialType;
 import webpagemanagementsystem.user.entity.Users;
 import webpagemanagementsystem.user.exception.SocialUnauthorizedException;
@@ -140,7 +138,7 @@ class UserServiceImplTest {
     }
 
     @DisplayName("social KAKAO getSocialInfo 성공")
-    //@Disabled
+    @Disabled
     @Test
     public void test6() throws SocialUnauthorizedException {
         // given
@@ -157,6 +155,30 @@ class UserServiceImplTest {
 
         final ObjectMapper mapper = new ObjectMapper();
         final KakaoSocialInfo kakaoSocialInfo = mapper.convertValue(resultMap, KakaoSocialInfo.class);
+    }
+
+    @DisplayName("convertHashMapToGeneric 성공")
+//    @Disabled
+    @Test
+    public void test7() throws SocialUnauthorizedException {
+        // given
+        String accessToken = "PzkY9rl8SvhXeTRH6wcdbmtMXMyWgAhQAAAAAQorDKgAAAGQc_gS1KL4plhSrbcM";
+        String platformName = "kakao";
+        Map<String, Object> socialInfoMap = userService.getSocialInfo(
+            platformName,
+            accessToken,
+            socialProperties.platform.get(platformName).getBaseUrl(),
+            socialProperties.platform.get(platformName).getPathUrl()
+        );
+
+        // when
+        KakaoSocialInfo result = userService.convertHashMapToGeneric(socialInfoMap, KakaoSocialInfo.class);
+
+        System.out.println(result);
+        // then
+        assertThat(result.getKakaoAccount().getEmail()).isEqualTo("m05214@naver.com");
+        assertThat(result.getId()).isEqualTo(3538716799L);
+
 
     }
 }

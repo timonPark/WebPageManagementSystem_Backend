@@ -19,4 +19,6 @@ public interface UserService {
     public Users joinNaverSocial(String accessToken);
 
     public Users joinGoogleSocial(String accessToken);
+
+    public <T> T convertHashMapToGeneric(Map<String, Object> socialInfo, Class<T> classType);
 }

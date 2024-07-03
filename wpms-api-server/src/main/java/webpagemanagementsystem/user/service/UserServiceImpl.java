@@ -17,7 +17,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 import webpagemanagementsystem.common.entity.IsUseEnum;
 import webpagemanagementsystem.common.variable.SocialProperties;
 import webpagemanagementsystem.user.dto.FindByEmailResponse;
-import webpagemanagementsystem.user.dto.KakaoSocialInfo;
+import webpagemanagementsystem.user.domain.KakaoSocialInfo;
 import webpagemanagementsystem.user.entity.Users;
 import webpagemanagementsystem.user.exception.SocialUnauthorizedException;
 import webpagemanagementsystem.user.repository.UsersRepository;
@@ -70,7 +70,8 @@ public class UserServiceImpl implements UserService {
         return null;
     }
 
-    private <T> T convertHashMapToGeneric(Map<String, Object> socialInfo, Class<T> classType) {
+    @Override
+    public <T> T convertHashMapToGeneric(Map<String, Object> socialInfo, Class<T> classType) {
         final ObjectMapper mapper = objectMapper;
         return mapper.convertValue(socialInfo, classType);
     }
