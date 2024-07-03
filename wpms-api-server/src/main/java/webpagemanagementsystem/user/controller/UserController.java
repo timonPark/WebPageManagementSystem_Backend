@@ -36,11 +36,11 @@ public class UserController {
         return ResponseEntity.ok(userService.convertUsersToFindByEmailResponse(userService.findByEmail(email)));
     }
 
-    @PostMapping("/kakao")
-    public ResponseEntity<UserLoginResponseDto> kakaoLogin(@RequestBody SocialRequestDto socialRequestDto)
+    @PostMapping("/social/kakao")
+    public ResponseEntity<String> kakaoLogin(@RequestBody SocialRequestDto socialRequestDto)
         throws SocialUnauthorizedException {
 
-        userService.joinKakaoSocial(socialRequestDto.getAccesstoken());
-        return ResponseEntity.ok(new UserLoginResponseDto("y"));
+        String accessToken = userService.joinKakaoSocial(socialRequestDto.getAccesstoken());
+        return ResponseEntity.ok(accessToken);
     }
 }

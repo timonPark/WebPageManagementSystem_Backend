@@ -14,7 +14,7 @@ public interface UserService {
     public Map<String, Object> getSocialInfo(String provider, String accessToken, String baseSocaiUrl, String baseSocaiPathUrl)
         throws SocialUnauthorizedException;
 
-    public Users joinKakaoSocial(String accessToken) throws SocialUnauthorizedException;
+    public String joinKakaoSocial(String accessToken) throws SocialUnauthorizedException;
 
     public Users joinNaverSocial(String accessToken);
 

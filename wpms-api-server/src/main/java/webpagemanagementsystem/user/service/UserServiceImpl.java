@@ -50,14 +50,17 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public Users createUser(Users user) {
-        return null;
+        return usersRepository.save(user);
     }
 
     @Override
-    public Users joinKakaoSocial(String accessToken) throws SocialUnauthorizedException {
+    public String joinKakaoSocial(String accessToken) throws SocialUnauthorizedException {
         var socialInfo = getSocialInfo("kakao", accessToken, socialProperties.platform.get("kakao").getBaseUrl(), socialProperties.platform.get("kakao").getPathUrl());
         final KakaoSocialInfo kakaoSocialInfo = convertHashMapToGeneric(socialInfo, KakaoSocialInfo.class);
-        return null;
+        createUser(kakaoSocialInfo.convertKakaoSocialInfoToUsers());
+
+        return "";
+
     }
 
     @Override
