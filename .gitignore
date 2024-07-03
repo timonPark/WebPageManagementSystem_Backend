@@ -39,4 +39,4 @@ out/
 /docker/postgres/postgres-data
 
 ### application 설정 파일 ###
-application.yml
+/wpms-api-server/src/main/resources/
