@@ -3,6 +3,9 @@ package webpagemanagementsystem.user.service;
 import java.util.Map;
 import webpagemanagementsystem.user.dto.FindByEmailResponse;
 import webpagemanagementsystem.user.entity.Users;
+import webpagemanagementsystem.user.exception.DeleteUserException;
+import webpagemanagementsystem.user.exception.DuplicationRegisterException;
+import webpagemanagementsystem.user.exception.NoUseException;
 import webpagemanagementsystem.user.exception.SocialUnauthorizedException;
 
 public interface UserService {
@@ -14,11 +17,19 @@ public interface UserService {
     public Map<String, Object> getSocialInfo(String provider, String accessToken, String baseSocaiUrl, String baseSocaiPathUrl)
         throws SocialUnauthorizedException;
 
-    public String joinKakaoSocial(String accessToken) throws SocialUnauthorizedException;
+    public String kakaoSocialLoginProgress(String accessToken)
+        throws SocialUnauthorizedException, DuplicationRegisterException, DeleteUserException, NoUseException;
 
-    public Users joinNaverSocial(String accessToken);
+    public Users naverSocialLoginProgress(String accessToken);
 
-    public Users joinGoogleSocial(String accessToken);
+    public Users googleSocialLoginProgress(String accessToken);
 
     public <T> T convertHashMapToGeneric(Map<String, Object> socialInfo, Class<T> classType);
+
+    public String socialAuthenticate(Users user);
+
+    public void preventDuplicationRegist(Users loginUser, Users registerUser)
+        throws DuplicationRegisterException;
+
+    public void validateUserIsUse(Users user) throws NoUseException, DeleteUserException;
 }

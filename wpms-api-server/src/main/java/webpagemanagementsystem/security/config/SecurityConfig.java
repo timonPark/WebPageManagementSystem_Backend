@@ -31,20 +31,21 @@ public class SecurityConfig {
     httpSecurity
         .csrf(AbstractHttpConfigurer::disable) // token을 사용하는 방식이기 때문에 csrf를 disable
         .addFilterBefore(corsFilter, UsernamePasswordAuthenticationFilter.class)
-        .exceptionHandling(exceptionConfig ->
-            exceptionConfig.authenticationEntryPoint(jwtAuthenticationEntryPoint)
-                .accessDeniedHandler(jwtAccessDeniedHandler)
-        )
+
         .headers(headerConfig -> headerConfig.frameOptions(HeadersConfigurer.FrameOptionsConfig::sameOrigin))
         .sessionManagement(httpSecuritySessionManagementConfigurer ->
             httpSecuritySessionManagementConfigurer.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
         )
         .authorizeHttpRequests(registry -> // api path
             registry.requestMatchers("/user/email/**").permitAll()
-
+                .requestMatchers("user/social/**").permitAll()
         )
-        .authorizeHttpRequests(registry -> registry
-            .anyRequest().authenticated()) // 나머지 경로는 jwt 인증 해야함
+        .authorizeHttpRequests(registry ->
+            registry.anyRequest().authenticated()) // 나머지 경로는 jwt 인증 해야함
+        .exceptionHandling(exceptionConfig ->
+            exceptionConfig.authenticationEntryPoint(jwtAuthenticationEntryPoint)
+                .accessDeniedHandler(jwtAccessDeniedHandler)
+        )
         .addFilterBefore(customJwtFilter, UsernamePasswordAuthenticationFilter.class);
 
     return httpSecurity.build();
