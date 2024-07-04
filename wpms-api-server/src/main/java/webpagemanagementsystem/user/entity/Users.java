@@ -11,6 +11,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.hibernate.annotations.ColumnDefault;
 import webpagemanagementsystem.common.entity.BaseTimeEntity;
 import webpagemanagementsystem.common.entity.IsUseEnum;
@@ -33,7 +34,8 @@ public class Users extends BaseTimeEntity {
     @Column(length = 100, nullable = false)
     private String email;
 
-    @Column(length = 100, nullable = true)
+    @Setter
+    @Column(length = 100)
     private String password;
 
     @Column(nullable = false)
@@ -41,14 +43,14 @@ public class Users extends BaseTimeEntity {
     @Enumerated(EnumType.STRING)
     private YNEnum isSocial;
 
-    @Column(length = 30, nullable = true)
+    @Column(length = 30)
     private String socialId;
 
-    @Column(nullable = true)
+    @Column()
     @Enumerated(EnumType.STRING)
     private SocialType socialType;
 
-    @Column(length = 200, nullable = true)
+    @Column(length = 200)
     private String picture;
 
     @Column(length = 1, nullable = false)
