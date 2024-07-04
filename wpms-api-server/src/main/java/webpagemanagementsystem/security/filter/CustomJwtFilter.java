@@ -6,6 +6,7 @@ import jakarta.servlet.ServletRequest;
 import jakarta.servlet.ServletResponse;
 import jakarta.servlet.http.HttpServletRequest;
 import java.io.IOException;
+import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.core.Authentication;
@@ -17,6 +18,7 @@ import webpagemanagementsystem.common.jwt.AccessTokenProvider;
 
 
 @Component
+@RequiredArgsConstructor
 public class CustomJwtFilter extends GenericFilterBean {
 
   private static final Logger logger = LoggerFactory.getLogger(CustomJwtFilter.class);
@@ -24,10 +26,6 @@ public class CustomJwtFilter extends GenericFilterBean {
   public static final String AUTHORIZATION_HEADER = "Authorization";
 
   private final AccessTokenProvider accessTokenProvider;
-
-  public CustomJwtFilter(AccessTokenProvider accessTokenProvider) {
-    this.accessTokenProvider = accessTokenProvider;
-  }
 
   // 실제 필터링 로직은 doFilter 안에 들어가게 된다. GenericFilterBean을 받아 구현
   // Dofilter는 토큰의 인증정보를 SecurityContext 안에 저장하는 역할 수행
