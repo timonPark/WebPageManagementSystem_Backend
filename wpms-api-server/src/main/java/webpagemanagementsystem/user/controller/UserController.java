@@ -1,8 +1,8 @@
 package webpagemanagementsystem.user.controller;
 
+import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -22,17 +22,13 @@ import webpagemanagementsystem.user.service.UserService;
 @RequiredArgsConstructor
 public class UserController {
 
-    private final UserService userService;
+    private final Map<String, UserService> userServiceMap;
 
-    @GetMapping("/email/{email}")
-    public ResponseEntity findByEmail(@PathVariable("email") String email) {
-        return ResponseEntity.ok(userService.convertUsersToFindByEmailResponse(userService.findByEmail(email)));
-    }
 
-    @PostMapping("/social/kakao")
-    public ResponseEntity<String> kakaoLogin(@RequestBody SocialRequestDto socialRequestDto) {
+    @PostMapping("/social/{socialType}")
+    public ResponseEntity<String> kakaoLogin(@PathVariable("socialType") String socialType, @RequestBody SocialRequestDto socialRequestDto) {
         try {
-            String accessToken = userService.kakaoSocialLoginProgress(socialRequestDto.getAccesstoken());
+            String accessToken = userServiceMap.get(socialType + "UserService").socialLoginProgress(socialRequestDto.getAccesstoken());
             return ResponseEntity.ok(accessToken);
         } catch (SocialUnauthorizedException e) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.fillInStackTrace().getMessage());
