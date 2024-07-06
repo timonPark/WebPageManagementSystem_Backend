@@ -31,9 +31,9 @@ import webpagemanagementsystem.user.exception.NoUseException;
 import webpagemanagementsystem.user.exception.SocialUnauthorizedException;
 import webpagemanagementsystem.user.repository.UsersRepository;
 
-@Service
+@Service("kakaoUserService")
 @RequiredArgsConstructor
-public class UserServiceImpl implements UserService {
+public class KakaoUserServiceImpl implements UserService {
 
     private final AccessTokenProvider accessTokenProvider;
 
@@ -67,7 +67,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public String kakaoSocialLoginProgress(String accessToken)
+    public String socialLoginProgress(String accessToken)
         throws SocialUnauthorizedException, DuplicationRegisterException, DeleteUserException, NoUseException {
         String socialType = SocialType.kakao.name();
         Map<String, Object> socialInfo = getSocialInfo(
@@ -102,16 +102,6 @@ public class UserServiceImpl implements UserService {
             // accessToken 발급
             return socialAuthenticate(resultUser);
         }
-    }
-
-    @Override
-    public Users naverSocialLoginProgress(String accessToken) {
-        return null;
-    }
-
-    @Override
-    public Users googleSocialLoginProgress(String accessToken) {
-        return null;
     }
 
     @Override

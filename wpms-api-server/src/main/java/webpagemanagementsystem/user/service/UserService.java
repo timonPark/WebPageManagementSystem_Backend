@@ -17,12 +17,8 @@ public interface UserService {
     public Map<String, Object> getSocialInfo(String provider, String accessToken, String baseSocaiUrl, String baseSocaiPathUrl)
         throws SocialUnauthorizedException;
 
-    public String kakaoSocialLoginProgress(String accessToken)
+    public String socialLoginProgress(String accessToken)
         throws SocialUnauthorizedException, DuplicationRegisterException, DeleteUserException, NoUseException;
-
-    public Users naverSocialLoginProgress(String accessToken);
-
-    public Users googleSocialLoginProgress(String accessToken);
 
     public <T> T convertHashMapToGeneric(Map<String, Object> socialInfo, Class<T> classType);
 
