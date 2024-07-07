@@ -17,11 +17,8 @@ import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
-import webpagemanagementsystem.common.entity.IsUseEnum;
-import webpagemanagementsystem.common.entity.YNEnum;
 import webpagemanagementsystem.common.jwt.AccessTokenProvider;
 import webpagemanagementsystem.common.variable.SocialProperties;
-import webpagemanagementsystem.user.dto.FindByEmailResponse;
 import webpagemanagementsystem.user.domain.KakaoSocialInfo;
 import webpagemanagementsystem.user.entity.SocialType;
 import webpagemanagementsystem.user.entity.Users;
@@ -29,42 +26,20 @@ import webpagemanagementsystem.user.exception.DeleteUserException;
 import webpagemanagementsystem.user.exception.DuplicationRegisterException;
 import webpagemanagementsystem.user.exception.NoUseException;
 import webpagemanagementsystem.user.exception.SocialUnauthorizedException;
-import webpagemanagementsystem.user.repository.UsersRepository;
 
-@Service("kakaoUserService")
+@Service("kakaoUserSocialService")
 @RequiredArgsConstructor
-public class KakaoUserServiceImpl implements UserService {
+public class KakaoUserSocialServiceImpl implements UserSocialService {
 
     private final AccessTokenProvider accessTokenProvider;
 
     private final AuthenticationManagerBuilder authenticationManagerBuilder;
 
-    private final UsersRepository usersRepository;
-
     private final SocialProperties socialProperties;
 
     private final ObjectMapper objectMapper;
 
-    @Override
-    public Users findByEmail(String email) {
-        try {
-            return usersRepository.findByEmailAndIsUse(email, IsUseEnum.U).stream().findFirst()
-                .orElseThrow(NoSuchElementException::new);
-        } catch(NoSuchElementException e) {
-            return null;
-        }
-
-    }
-
-    @Override
-    public FindByEmailResponse convertUsersToFindByEmailResponse(Users user) {
-        return user != null ? new FindByEmailResponse(user) : null;
-    }
-
-    @Override
-    public Users createUser(Users user) {
-        return usersRepository.save(user);
-    }
+    private final UserService userService;
 
     @Override
     public String socialLoginProgress(String accessToken)
@@ -83,21 +58,21 @@ public class KakaoUserServiceImpl implements UserService {
         Users loginUser = kakaoSocialInfo.convertKakaoSocialInfoToUsers();
 
         try {
-            Users registUser = usersRepository.findByEmail(kakaoSocialInfo.convertKakaoSocialInfoToUsers().getEmail())
+            Users registUser = userService.findByEmail(kakaoSocialInfo.convertKakaoSocialInfoToUsers().getEmail())
                 .stream().findFirst()
                 .orElseThrow(NoSuchElementException::new);
 
             // 중복 회원가입 방지
-            preventDuplicationRegist(loginUser,registUser);
+            userService.preventDuplicationRegist(loginUser,registUser);
 
             // 로그인 시 휴면처리
-            validateUserIsUse(registUser);
+            userService.validateUserIsUse(registUser);
 
             // accessToken 발급
             return socialAuthenticate(registUser);
         } catch (NoSuchElementException e) {
             // 회원가입
-            Users resultUser = createUser(kakaoSocialInfo.convertKakaoSocialInfoToUsers());
+            Users resultUser = userService.createUser(kakaoSocialInfo.convertKakaoSocialInfoToUsers());
 
             // accessToken 발급
             return socialAuthenticate(resultUser);
@@ -140,33 +115,6 @@ public class KakaoUserServiceImpl implements UserService {
         UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(user.getEmail(), user.getSocialId());
         Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
         return accessTokenProvider.createToken(authentication);
-    }
-
-    @Override
-    public void preventDuplicationRegist(Users loginUser, Users registerUser)
-        throws DuplicationRegisterException {
-        if (loginUser.getEmail().equals(registerUser.getEmail())){
-
-            if (!loginUser.getIsSocial().name().equals(registerUser.getIsSocial().name())) {
-                throw new DuplicationRegisterException(registerUser);
-            } else {
-                if (loginUser.getIsSocial() == YNEnum.Y) {
-                    if (!loginUser.getSocialType().name().equals(registerUser.getSocialType().name())) {
-                        throw new DuplicationRegisterException(registerUser);
-                    }
-                }
-            }
-        }
-    }
-
-    @Override
-    public void validateUserIsUse(Users user) throws NoUseException, DeleteUserException {
-        if (user.getIsUse().name().equals(IsUseEnum.N.name())) {
-            throw new NoUseException();
-        }
-        if (user.getIsUse().name().equals(IsUseEnum.D.name())) {
-            throw new DeleteUserException();
-        }
     }
 
 

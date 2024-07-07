@@ -20,7 +20,7 @@ public class CustomUserDetailsService implements UserDetailsService {
 
   @Override
   public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-    return new UserAdapter(isSocialTypeYInputPasswordToEncodingSocialId(userService.findByEmail(email)));
+    return new UserAdapter(isSocialTypeYInputPasswordToEncodingSocialId(userService.findByEmailAndIsUseY(email)));
   }
 
   public Users isSocialTypeYInputPasswordToEncodingSocialId (Users user) {
