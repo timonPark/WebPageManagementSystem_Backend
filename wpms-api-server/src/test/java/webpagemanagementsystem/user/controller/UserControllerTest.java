@@ -41,7 +41,7 @@ class UserControllerTest {
         // given
         String email = "m11111@naver.com2";
 
-        given(userService.findByEmail(email)).willReturn(null);
+        given(userService.findByEmailAndIsUseY(email)).willReturn(null);
         // when
 
         // then
@@ -66,7 +66,7 @@ class UserControllerTest {
             .isUse(IsUseEnum.U)
             .build();
         FindByEmailResponse findByEmailResponse = new FindByEmailResponse(user);
-        given(userService.findByEmail(email)).willReturn(user);
+        given(userService.findByEmailAndIsUseY(email)).willReturn(user);
         given(userService.convertUsersToFindByEmailResponse(user)).willReturn(findByEmailResponse);
 
         // when
