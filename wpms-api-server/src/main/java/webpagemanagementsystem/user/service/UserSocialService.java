@@ -9,10 +9,7 @@ import webpagemanagementsystem.user.exception.SocialUnauthorizedException;
 
 public interface UserSocialService {
 
-  public Map<String, Object> getSocialInfo(String provider, String accessToken, String baseSocaiUrl, String baseSocaiPathUrl)
-      throws SocialUnauthorizedException;
-
-  public String socialLoginProgress(String accessToken)
+  public String socialLoginProgress(String accessToken, String socialType)
       throws SocialUnauthorizedException, DuplicationRegisterException, DeleteUserException, NoUseException;
 
   public <T> T convertHashMapToGeneric(Map<String, Object> socialInfo, Class<T> classType);

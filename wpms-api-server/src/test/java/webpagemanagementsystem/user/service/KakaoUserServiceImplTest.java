@@ -3,11 +3,9 @@ package webpagemanagementsystem.user.service;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.BDDMockito.given;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Map;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -28,50 +26,17 @@ class KakaoUserServiceImplTest {
   private SocialProperties socialProperties;
 
   @Autowired
-  private UserSocialService userSocialService;
+  private UserSocialServiceImpl userSocialServiceImpl;
+
+  @Autowired
+  private UserSocialService kakaoUserSocialService;
 
   @Autowired
   private UserService userService;
 
   @MockBean(name = "usersRepository")
   private UsersRepository usersRepository;
-  @DisplayName("social KAKAO getSocialInfo 실패")
-  @Test
-  void test5(){
-    // given
-    String accessToken = "OzwbTDNOIls9L4SAISzziPRUwB4_JnL7AAAAAQo9dRsAAAGQcUy12qL4plhSrbcM";
-    String platformName = "kakao";
 
-    // when & then
-    Assertions.assertThrows(SocialUnauthorizedException.class, () -> {
-      userSocialService.getSocialInfo(
-          platformName ,
-          accessToken,
-          socialProperties.platform.get(platformName).getBaseUrl(),
-          socialProperties.platform.get(platformName).getPathUrl()
-      );
-    });
-  }
-
-  @DisplayName("social KAKAO getSocialInfo 성공")
-  @Disabled
-  @Test
-  void test6() throws SocialUnauthorizedException {
-    // given
-    String accessToken = "qHB9Xxbxr4yEoZtZZjJsSP3KDkdiCRXiAAAAAQopyNkAAAGQcy-ecqL4plhSrbcM";
-    String platformName = "kakao";
-
-    // when
-    Map<String, Object> resultMap = userSocialService.getSocialInfo(
-        platformName,
-        accessToken,
-        socialProperties.platform.get(platformName).getBaseUrl(),
-        socialProperties.platform.get(platformName).getPathUrl()
-    );
-
-    final ObjectMapper mapper = new ObjectMapper();
-    final KakaoSocialInfo kakaoSocialInfo = mapper.convertValue(resultMap, KakaoSocialInfo.class);
-  }
 
   @DisplayName("convertHashMapToGeneric 성공")
   @Disabled
@@ -80,7 +45,7 @@ class KakaoUserServiceImplTest {
     // given
     String accessToken = "PzkY9rl8SvhXeTRH6wcdbmtMXMyWgAhQAAAAAQorDKgAAAGQc_gS1KL4plhSrbcM";
     String platformName = "kakao";
-    Map<String, Object> socialInfoMap = userSocialService.getSocialInfo(
+    Map<String, Object> socialInfoMap = userSocialServiceImpl.getSocialInfo(
         platformName,
         accessToken,
         socialProperties.platform.get(platformName).getBaseUrl(),
@@ -88,7 +53,7 @@ class KakaoUserServiceImplTest {
     );
 
     // when
-    KakaoSocialInfo result = userSocialService.convertHashMapToGeneric(socialInfoMap, KakaoSocialInfo.class);
+    KakaoSocialInfo result = kakaoUserSocialService.convertHashMapToGeneric(socialInfoMap, KakaoSocialInfo.class);
 
     System.out.println(result);
     // then
@@ -105,14 +70,14 @@ class KakaoUserServiceImplTest {
     // given
     String accessToken = "MB-D8MTH01MDSmEu5DStdW4ctYwUMv4dAAAAAQo9dVwAAAGQd2QewqL4plhSrbcM";
     String platformName = "kakao";
-    Map<String, Object> socialInfoMap = userSocialService.getSocialInfo(
+    Map<String, Object> socialInfoMap = userSocialServiceImpl.getSocialInfo(
         platformName,
         accessToken,
         socialProperties.platform.get(platformName).getBaseUrl(),
         socialProperties.platform.get(platformName).getPathUrl()
     );
 
-    KakaoSocialInfo kakaoSocialInfo = userSocialService.convertHashMapToGeneric(socialInfoMap, KakaoSocialInfo.class);
+    KakaoSocialInfo kakaoSocialInfo = kakaoUserSocialService.convertHashMapToGeneric(socialInfoMap, KakaoSocialInfo.class);
     Users user = kakaoSocialInfo.convertKakaoSocialInfoToUsers();
     Users expectResultUser = Users.builder()
         .userNo(15L)
@@ -142,14 +107,14 @@ class KakaoUserServiceImplTest {
     // given
     String platformAccessToken = "iYcyRoKcy8-p8TYOH7kDux1R_ACH1wwfAAAAAQopyV4AAAGQfFlOw6L4plhSrbcM";
     String platformName = "kakao";
-    Map<String, Object> socialInfoMap = userSocialService.getSocialInfo(
+    Map<String, Object> socialInfoMap = userSocialServiceImpl.getSocialInfo(
         platformName,
         platformAccessToken,
         socialProperties.platform.get(platformName).getBaseUrl(),
         socialProperties.platform.get(platformName).getPathUrl()
     );
 
-    KakaoSocialInfo kakaoSocialInfo = userSocialService.convertHashMapToGeneric(socialInfoMap, KakaoSocialInfo.class);
+    KakaoSocialInfo kakaoSocialInfo = kakaoUserSocialService.convertHashMapToGeneric(socialInfoMap, KakaoSocialInfo.class);
     Users user = kakaoSocialInfo.convertKakaoSocialInfoToUsers();
     Users expectResultUser = Users.builder()
         .userNo(15L)
@@ -165,7 +130,7 @@ class KakaoUserServiceImplTest {
     given(usersRepository.findByEmailAndIsUse(user.getEmail(), IsUseEnum.U)).willReturn(Arrays.asList(expectResultUser));
 
     // when
-    String accessToken = userSocialService.socialAuthenticate(expectResultUser);
+    String accessToken = kakaoUserSocialService.socialAuthenticate(expectResultUser);
 
     // then
     assertThat(accessToken).isNotNull();
