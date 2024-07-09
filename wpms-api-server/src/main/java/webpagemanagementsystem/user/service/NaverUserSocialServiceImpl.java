@@ -23,19 +23,16 @@ public class NaverUserSocialServiceImpl extends UserSocialServiceImpl implements
       ObjectMapper objectMapper,
       UserService userService
       ) {
-    super(accessTokenProvider, authenticationManagerBuilder, objectMapper);
+    super(accessTokenProvider, authenticationManagerBuilder, objectMapper, userService);
     this.socialProperties = socialProperties;
-    this.userService = userService;
   }
 
   private final SocialProperties socialProperties;
 
-  private final UserService userService;
-
   @Override
   public String socialLoginProgress(String accessToken, String socialType)
       throws SocialUnauthorizedException, DuplicationRegisterException, DeleteUserException, NoUseException {
-    final NaverSocialInfo naverSocialInfo = convertHashMapToGeneric(
+    return returnSocialLoginProgress(convertHashMapToGeneric(
         getSocialInfo(
             socialType,
             accessToken,
@@ -43,17 +40,6 @@ public class NaverUserSocialServiceImpl extends UserSocialServiceImpl implements
             socialProperties.platform.get(socialType).getPathUrl()
         ),
         NaverSocialInfo.class
-    );
-    return null;
-  }
-
-  @Override
-  public <T> T convertHashMapToGeneric(Map<String, Object> socialInfo, Class<T> classType) {
-    return null;
-  }
-
-  @Override
-  public String socialAuthenticate(Users user) {
-    return null;
+    ).convertNaverSocialInfoToUsers());
   }
 }

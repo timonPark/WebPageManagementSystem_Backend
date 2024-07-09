@@ -23,19 +23,16 @@ public class KakaoUserSocialServiceImpl extends UserSocialServiceImpl implements
         ObjectMapper objectMapper,
         UserService userService
     ) {
-        super(accessTokenProvider, authenticationManagerBuilder, objectMapper);
+        super(accessTokenProvider, authenticationManagerBuilder, objectMapper, userService);
         this.socialProperties = socialProperties;
-        this.userService = userService;
     }
 
     private final SocialProperties socialProperties;
 
-    private final UserService userService;
-
     @Override
     public String socialLoginProgress(String accessToken, String socialType)
         throws SocialUnauthorizedException, DuplicationRegisterException, DeleteUserException, NoUseException {
-        final KakaoSocialInfo kakaoSocialInfo = convertHashMapToGeneric(
+        return returnSocialLoginProgress(convertHashMapToGeneric(
             getSocialInfo(
                 socialType,
                 accessToken,
@@ -43,28 +40,6 @@ public class KakaoUserSocialServiceImpl extends UserSocialServiceImpl implements
                 socialProperties.platform.get(socialType).getPathUrl()
             ),
             KakaoSocialInfo.class
-        );
-        Users loginUser = kakaoSocialInfo.convertKakaoSocialInfoToUsers();
-
-        try {
-            Users registUser = userService.findByEmail(kakaoSocialInfo.convertKakaoSocialInfoToUsers().getEmail())
-                .stream().findFirst()
-                .orElseThrow(NoSuchElementException::new);
-
-            // 중복 회원가입 방지
-            userService.preventDuplicationRegist(loginUser,registUser);
-
-            // 로그인 시 휴면처리
-            userService.validateUserIsUse(registUser);
-
-            // accessToken 발급
-            return socialAuthenticate(registUser);
-        } catch (NoSuchElementException e) {
-            // 회원가입
-            Users resultUser = userService.createUser(kakaoSocialInfo.convertKakaoSocialInfoToUsers());
-
-            // accessToken 발급
-            return socialAuthenticate(resultUser);
-        }
+        ).convertKakaoSocialInfoToUsers());
     }
 }
