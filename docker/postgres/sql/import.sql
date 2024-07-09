@@ -5,7 +5,7 @@ create table users
     email       varchar(100),
     password    varchar(100),
     is_social   varchar(1) default 'N'::character varying,
-    social_id   varchar(30),
+    social_id   varchar(50),
     social_type varchar(20),
     picture     varchar(200),
     is_use      varchar(1) default 'U'::character varying,
