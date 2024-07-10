@@ -1,13 +1,11 @@
 package webpagemanagementsystem.user.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import java.util.NoSuchElementException;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.stereotype.Service;
 import webpagemanagementsystem.common.jwt.AccessTokenProvider;
 import webpagemanagementsystem.common.variable.SocialProperties;
 import webpagemanagementsystem.user.domain.KakaoSocialInfo;
-import webpagemanagementsystem.user.entity.Users;
 import webpagemanagementsystem.user.exception.DeleteUserException;
 import webpagemanagementsystem.user.exception.DuplicationRegisterException;
 import webpagemanagementsystem.user.exception.NoUseException;
