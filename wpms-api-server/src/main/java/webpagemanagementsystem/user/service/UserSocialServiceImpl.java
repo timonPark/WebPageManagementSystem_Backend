@@ -8,6 +8,7 @@ import java.util.NoSuchElementException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -18,6 +19,11 @@ import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 import webpagemanagementsystem.common.jwt.AccessTokenProvider;
+import webpagemanagementsystem.common.variable.SocialProperties;
+import webpagemanagementsystem.user.domain.GoogleSocialInfo;
+import webpagemanagementsystem.user.domain.KakaoSocialInfo;
+import webpagemanagementsystem.user.domain.NaverSocialInfo;
+import webpagemanagementsystem.user.domain.SocialInfo;
 import webpagemanagementsystem.user.entity.Users;
 import webpagemanagementsystem.user.exception.DeleteUserException;
 import webpagemanagementsystem.user.exception.DuplicationRegisterException;
@@ -25,45 +31,66 @@ import webpagemanagementsystem.user.exception.NoUseException;
 import webpagemanagementsystem.user.exception.SocialUnauthorizedException;
 
 @Service
-@RequiredArgsConstructor
-public class UserSocialServiceImpl {
+public class UserSocialServiceImpl implements  UserSocialService{
+
+  public UserSocialServiceImpl(
+      AccessTokenProvider accessTokenProvider,
+      AuthenticationManagerBuilder authenticationManagerBuilder,
+      UserService userService,
+      SocialProperties socialProperties
+      ) {
+    this.accessTokenProvider = accessTokenProvider;
+    this.authenticationManagerBuilder = authenticationManagerBuilder;
+    this.userService = userService;
+    this.socialProperties = socialProperties;
+    this.socialInfoMap = Map.of(
+        "kakao", KakaoSocialInfo.class,
+        "naver", NaverSocialInfo.class,
+        "google", GoogleSocialInfo.class
+    );
+  }
 
   private final AccessTokenProvider accessTokenProvider;
 
   private final AuthenticationManagerBuilder authenticationManagerBuilder;
 
-  private final ObjectMapper objectMapper;
-
   private final UserService userService;
-  public Map<String, Object> getSocialInfo(String provider, String accessToken, String baseSocaiUrl, String baseSocaiPathUrl)
-      throws SocialUnauthorizedException {
+
+  private final SocialProperties socialProperties;
+
+  private final Map<String, Class<? extends SocialInfo>> socialInfoMap;
+
+  public <T extends SocialInfo> String socialLoginProgress(String accessToken, String socialType)
+      throws SocialUnauthorizedException, DuplicationRegisterException, DeleteUserException, NoUseException {
+    return returnSocialLoginProgress(
+        getSocialInfo(
+            socialType,
+            accessToken,
+            socialProperties.platform.get(socialType).getBaseUrl(),
+            socialProperties.platform.get(socialType).getPathUrl(),
+            socialInfoMap.get(socialType)
+        ).convertSocialInfoToUsers()
+    );
+  }
+
+    public <T extends SocialInfo> T getSocialInfo(String provider, String accessToken, String baseSocaiUrl, String baseSocaiPathUrl, Class<T> socialInfoType)
+      throws SocialUnauthorizedException{
     URI uri = UriComponentsBuilder
         .fromUriString(baseSocaiUrl)
         .path(baseSocaiPathUrl)
         .encode().build().toUri();
 
-    HttpHeaders headers = new HttpHeaders();
+    final HttpHeaders headers = new HttpHeaders();
     headers.add("Authorization", "Bearer " + accessToken);
     headers.add("Content-type", "application/x-www-form-urlencoded;charset=utf-8");
-
-    HttpEntity<MultiValueMap<String, Object>> kakaoUserInfoRequest = new HttpEntity<>(headers);
     try {
-      ResponseEntity<HashMap> responseEntity = new RestTemplate().postForEntity(
-          uri.toString(),
-          kakaoUserInfoRequest,
-          HashMap.class
-      );
-      System.out.println(responseEntity);
-      return responseEntity.getBody();
+      return (new RestTemplate().exchange(uri, HttpMethod.GET, new HttpEntity<>(headers), socialInfoType)).getBody();
     } catch (HttpClientErrorException e) {
       throw new SocialUnauthorizedException(provider, accessToken);
     }
 
   }
 
-  public <T> T convertHashMapToGeneric(Map<String, Object> socialInfo, Class<T> classType) {
-    return objectMapper.convertValue(socialInfo, classType);
-  }
 
   public String socialAuthenticate(Users user) {
     UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(user.getEmail(), user.getSocialId());

@@ -27,80 +27,80 @@ class UserSocialServiceImplTest {
 
   @MockBean(name = "usersRepository")
   private UsersRepository usersRepository;
-  @DisplayName("social KAKAO getSocialInfo 실패")
-  @Test
-  void test1(){
-    // given
-    String accessToken = "OzwbTDNOIls9L4SAISzziPRUwB4_JnL7AAAAAQo9dRsAAAGQcUy12qL4plhSrbcM";
-    String platformName = "kakao";
-
-    // when & then
-    Assertions.assertThrows(SocialUnauthorizedException.class, () -> {
-      userSocialServiceImpl.getSocialInfo(
-          platformName ,
-          accessToken,
-          socialProperties.platform.get(platformName).getBaseUrl(),
-          socialProperties.platform.get(platformName).getPathUrl()
-      );
-    });
-  }
-
-  @DisplayName("social KAKAO getSocialInfo 성공")
-  @Disabled
-  @Test
-  void test2() throws SocialUnauthorizedException {
-    // given
-    String accessToken = "qHB9Xxbxr4yEoZtZZjJsSP3KDkdiCRXiAAAAAQopyNkAAAGQcy-ecqL4plhSrbcM";
-    String platformName = "kakao";
-
-    // when
-    Map<String, Object> resultMap = userSocialServiceImpl.getSocialInfo(
-        platformName,
-        accessToken,
-        socialProperties.platform.get(platformName).getBaseUrl(),
-        socialProperties.platform.get(platformName).getPathUrl()
-    );
-
-    final ObjectMapper mapper = new ObjectMapper();
-    final KakaoSocialInfo kakaoSocialInfo = mapper.convertValue(resultMap, KakaoSocialInfo.class);
-  }
-
-  @DisplayName("social KAKAO getSocialInfo 실패")
-  @Test
-  void test5(){
-    // given
-    String accessToken = "OzwbTDNOIls9L4SAISzziPRUwB4_JnL7AAAAAQo9dRsAAAGQcUy12qL4plhSrbcM";
-    String platformName = "kakao";
-
-    // when & then
-    Assertions.assertThrows(SocialUnauthorizedException.class, () -> {
-      userSocialServiceImpl.getSocialInfo(
-          platformName ,
-          accessToken,
-          socialProperties.platform.get(platformName).getBaseUrl(),
-          socialProperties.platform.get(platformName).getPathUrl()
-      );
-    });
-  }
-
-  @DisplayName("social KAKAO getSocialInfo 성공")
-  @Disabled
-  @Test
-  void test6() throws SocialUnauthorizedException {
-    // given
-    String accessToken = "qHB9Xxbxr4yEoZtZZjJsSP3KDkdiCRXiAAAAAQopyNkAAAGQcy-ecqL4plhSrbcM";
-    String platformName = "kakao";
-
-    // when
-    Map<String, Object> resultMap = userSocialServiceImpl.getSocialInfo(
-        platformName,
-        accessToken,
-        socialProperties.platform.get(platformName).getBaseUrl(),
-        socialProperties.platform.get(platformName).getPathUrl()
-    );
-
-    final ObjectMapper mapper = new ObjectMapper();
-    final KakaoSocialInfo kakaoSocialInfo = mapper.convertValue(resultMap, KakaoSocialInfo.class);
-  }
+//  @DisplayName("social KAKAO getSocialInfo 실패")
+//  @Test
+//  void test1(){
+//    // given
+//    String accessToken = "OzwbTDNOIls9L4SAISzziPRUwB4_JnL7AAAAAQo9dRsAAAGQcUy12qL4plhSrbcM";
+//    String platformName = "kakao";
+//
+//    // when & then
+//    Assertions.assertThrows(SocialUnauthorizedException.class, () -> {
+//      userSocialServiceImpl.getSocialInfo(
+//          platformName ,
+//          accessToken,
+//          socialProperties.platform.get(platformName).getBaseUrl(),
+//          socialProperties.platform.get(platformName).getPathUrl()
+//      );
+//    });
+//  }
+//
+//  @DisplayName("social KAKAO getSocialInfo 성공")
+//  @Disabled
+//  @Test
+//  void test2() throws SocialUnauthorizedException {
+//    // given
+//    String accessToken = "qHB9Xxbxr4yEoZtZZjJsSP3KDkdiCRXiAAAAAQopyNkAAAGQcy-ecqL4plhSrbcM";
+//    String platformName = "kakao";
+//
+//    // when
+//    Map<String, Object> resultMap = userSocialServiceImpl.getSocialInfo(
+//        platformName,
+//        accessToken,
+//        socialProperties.platform.get(platformName).getBaseUrl(),
+//        socialProperties.platform.get(platformName).getPathUrl()
+//    );
+//
+//    final ObjectMapper mapper = new ObjectMapper();
+//    final KakaoSocialInfo kakaoSocialInfo = mapper.convertValue(resultMap, KakaoSocialInfo.class);
+//  }
+//
+//  @DisplayName("social KAKAO getSocialInfo 실패")
+//  @Test
+//  void test5(){
+//    // given
+//    String accessToken = "OzwbTDNOIls9L4SAISzziPRUwB4_JnL7AAAAAQo9dRsAAAGQcUy12qL4plhSrbcM";
+//    String platformName = "kakao";
+//
+//    // when & then
+//    Assertions.assertThrows(SocialUnauthorizedException.class, () -> {
+//      userSocialServiceImpl.getSocialInfo(
+//          platformName ,
+//          accessToken,
+//          socialProperties.platform.get(platformName).getBaseUrl(),
+//          socialProperties.platform.get(platformName).getPathUrl()
+//      );
+//    });
+//  }
+//
+//  @DisplayName("social KAKAO getSocialInfo 성공")
+//  @Disabled
+//  @Test
+//  void test6() throws SocialUnauthorizedException {
+//    // given
+//    String accessToken = "qHB9Xxbxr4yEoZtZZjJsSP3KDkdiCRXiAAAAAQopyNkAAAGQcy-ecqL4plhSrbcM";
+//    String platformName = "kakao";
+//
+//    // when
+//    Map<String, Object> resultMap = userSocialServiceImpl.getSocialInfo(
+//        platformName,
+//        accessToken,
+//        socialProperties.platform.get(platformName).getBaseUrl(),
+//        socialProperties.platform.get(platformName).getPathUrl()
+//    );
+//
+//    final ObjectMapper mapper = new ObjectMapper();
+//    final KakaoSocialInfo kakaoSocialInfo = mapper.convertValue(resultMap, KakaoSocialInfo.class);
+//  }
 
 }

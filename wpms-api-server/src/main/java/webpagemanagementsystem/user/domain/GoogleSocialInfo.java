@@ -8,7 +8,7 @@ import webpagemanagementsystem.user.entity.SocialType;
 import webpagemanagementsystem.user.entity.Users;
 
 @Data
-public class GoogleSocialInfo {
+public class GoogleSocialInfo implements SocialInfo{
 
   String id;
 
@@ -29,7 +29,8 @@ public class GoogleSocialInfo {
 
   String locale;
 
-  public Users convertKakaoSocialInfoToUsers(){
+  @Override
+  public Users convertSocialInfoToUsers(){
     return Users.builder()
         .name(this.getName())
         .email(this.getEmail())

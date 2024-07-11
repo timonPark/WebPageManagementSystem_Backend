@@ -8,12 +8,12 @@ import webpagemanagementsystem.user.entity.SocialType;
 import webpagemanagementsystem.user.entity.Users;
 
 @Data
-public class NaverSocialInfo {
+public class NaverSocialInfo implements SocialInfo{
   NaverResponse response;
   String resultcode;
   String message;
 
-  public Users convertNaverSocialInfoToUsers(){
+  public Users convertSocialInfoToUsers(){
     return Users.builder()
         .name(this.response.getName())
         .email(this.response.getEmail())

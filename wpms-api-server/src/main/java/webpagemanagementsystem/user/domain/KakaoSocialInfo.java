@@ -9,7 +9,7 @@ import webpagemanagementsystem.user.entity.SocialType;
 import webpagemanagementsystem.user.entity.Users;
 
 @Data
-public class KakaoSocialInfo {
+public class KakaoSocialInfo implements SocialInfo{
   Long id;
 
   @JsonProperty("connected_at")
@@ -20,7 +20,7 @@ public class KakaoSocialInfo {
 
   KaKaoProperties properties;
 
-  public Users convertKakaoSocialInfoToUsers(){
+  public Users convertSocialInfoToUsers(){
     return Users.builder()
         .name(this.getKakaoAccount().getProfile().getNickname())
         .email(this.getKakaoAccount().getEmail())

@@ -21,13 +21,13 @@ import webpagemanagementsystem.user.service.UserSocialService;
 @RequiredArgsConstructor
 public class UserController {
 
-    private final Map<String, UserSocialService> userSocialServiceMap;
+    private final UserSocialService userSocialService;
 
 
     @PostMapping("/social/{socialType}")
     public ResponseEntity<String> kakaoLogin(@PathVariable("socialType") String socialType, @RequestBody SocialRequestDto socialRequestDto) {
         try {
-            String accessToken = userSocialServiceMap.get(socialType + "UserSocialService").socialLoginProgress(socialRequestDto.getAccesstoken(), socialType);
+            String accessToken = userSocialService.socialLoginProgress(socialRequestDto.getAccesstoken(), socialType);
             return ResponseEntity.ok(accessToken);
         } catch (SocialUnauthorizedException e) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.fillInStackTrace().getMessage());
