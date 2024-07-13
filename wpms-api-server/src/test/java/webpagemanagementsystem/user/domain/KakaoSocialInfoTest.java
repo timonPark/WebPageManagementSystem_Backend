@@ -46,7 +46,7 @@ class KakaoSocialInfoTest {
     kakaoSocialInfo.setProperties(kaKaoProperties);
 
     // when
-    Users resultUser = kakaoSocialInfo.convertKakaoSocialInfoToUsers();
+    Users resultUser = kakaoSocialInfo.convertSocialInfoToUsers();
 
     // then
     assertThat(resultUser.getEmail()).isEqualTo(kakaoSocialInfo.getKakaoAccount().getEmail());
