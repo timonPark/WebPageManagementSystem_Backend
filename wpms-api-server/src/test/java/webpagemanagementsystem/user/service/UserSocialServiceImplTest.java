@@ -1,6 +1,8 @@
 package webpagemanagementsystem.user.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.BDDMockito.given;
+
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
@@ -8,6 +10,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import webpagemanagementsystem.common.entity.IsUseEnum;
 import webpagemanagementsystem.common.variable.SocialProperties;
 import webpagemanagementsystem.user.domain.GoogleSocialInfo;
 import webpagemanagementsystem.user.domain.KakaoAccount;
@@ -142,5 +145,69 @@ class UserSocialServiceImplTest {
 
     // then
     assertThat(googleSocialInfo).isEqualTo(resultSocialInfo);
+  }
+
+  @DisplayName("returnSocialLoginProgress 회원가입 후 AccessToken 발급")
+  @Test
+  void test5() throws SocialUnauthorizedException {
+    // given
+
+//    given(usersRepository.findByEmail(email)).willReturn(list);
+//    String accessToken = "ya29.a0AXooCgtrC6cYprCH5k9ct8MOnM25lhCZk4BskP5sXzJyf6_QpPeTPTmOV9t6ZXToscECN4g7xP4L4l19GtG96ME67EDT26V8YL0f8vzxE4L0JlsEcGCpPVocIf5vmDr0gwZtjAywCpEHWdgTlVNRl0GvGY7daALZ8_EaCgYKAfsSARMSFQHGX2MiB1lu_47fteUhBKi2Npn6Ag0170";
+//    String platformName = "google";
+//    Class<GoogleSocialInfo>  socialInfoType = GoogleSocialInfo.class;
+//    GoogleSocialInfo googleSocialInfo = new GoogleSocialInfo();
+//    googleSocialInfo.setId("112625927003722335487");
+//    googleSocialInfo.setEmail("kindcorder@gmail.com");
+//    googleSocialInfo.setVerifiedEmail("true");
+//    googleSocialInfo.setName("Park jonghoon");
+//    googleSocialInfo.setGivenName("Park");
+//    googleSocialInfo.setFamilyName("jonghoon");
+//    googleSocialInfo.setPicture("https://lh3.googleusercontent.com/a/ACg8ocIlMpTb4DRnXpwM2YhAqAVUS6D1QD5siteHn5IVIy9dPERcew=s96-c");
+//    googleSocialInfo.setLocale(null);
+//
+//    // when
+//    GoogleSocialInfo resultSocialInfo =userSocialServiceImpl.getSocialInfo(
+//        platformName,
+//        accessToken,
+//        socialProperties.platform.get(platformName).getBaseUrl(),
+//        socialProperties.platform.get(platformName).getPathUrl(),
+//        socialInfoType
+//    );
+//
+//    // then
+//    assertThat(googleSocialInfo).isEqualTo(resultSocialInfo);
+  }
+
+  @DisplayName("returnSocialLoginProgress 로그인 후 AccessToken 발급")
+  @Test
+  void test6() throws SocialUnauthorizedException {
+    // given
+
+//    given(usersRepository.findByEmail(email)).willReturn(list);
+//    String accessToken = "ya29.a0AXooCgtrC6cYprCH5k9ct8MOnM25lhCZk4BskP5sXzJyf6_QpPeTPTmOV9t6ZXToscECN4g7xP4L4l19GtG96ME67EDT26V8YL0f8vzxE4L0JlsEcGCpPVocIf5vmDr0gwZtjAywCpEHWdgTlVNRl0GvGY7daALZ8_EaCgYKAfsSARMSFQHGX2MiB1lu_47fteUhBKi2Npn6Ag0170";
+//    String platformName = "google";
+//    Class<GoogleSocialInfo>  socialInfoType = GoogleSocialInfo.class;
+//    GoogleSocialInfo googleSocialInfo = new GoogleSocialInfo();
+//    googleSocialInfo.setId("112625927003722335487");
+//    googleSocialInfo.setEmail("kindcorder@gmail.com");
+//    googleSocialInfo.setVerifiedEmail("true");
+//    googleSocialInfo.setName("Park jonghoon");
+//    googleSocialInfo.setGivenName("Park");
+//    googleSocialInfo.setFamilyName("jonghoon");
+//    googleSocialInfo.setPicture("https://lh3.googleusercontent.com/a/ACg8ocIlMpTb4DRnXpwM2YhAqAVUS6D1QD5siteHn5IVIy9dPERcew=s96-c");
+//    googleSocialInfo.setLocale(null);
+//
+//    // when
+//    GoogleSocialInfo resultSocialInfo =userSocialServiceImpl.getSocialInfo(
+//        platformName,
+//        accessToken,
+//        socialProperties.platform.get(platformName).getBaseUrl(),
+//        socialProperties.platform.get(platformName).getPathUrl(),
+//        socialInfoType
+//    );
+//
+//    // then
+//    assertThat(googleSocialInfo).isEqualTo(resultSocialInfo);
   }
 }
