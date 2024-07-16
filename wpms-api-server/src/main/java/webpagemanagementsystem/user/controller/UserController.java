@@ -1,6 +1,5 @@
 package webpagemanagementsystem.user.controller;
 
-import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -22,7 +21,6 @@ import webpagemanagementsystem.user.service.UserSocialService;
 public class UserController {
 
     private final UserSocialService userSocialService;
-
 
     @PostMapping("/social/{socialType}")
     public ResponseEntity<String> kakaoLogin(@PathVariable("socialType") String socialType, @RequestBody SocialRequestDto socialRequestDto) {
