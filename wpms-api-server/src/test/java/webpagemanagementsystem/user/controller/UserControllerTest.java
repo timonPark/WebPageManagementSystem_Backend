@@ -3,6 +3,7 @@ package webpagemanagementsystem.user.controller;
 
 import static org.mockito.BDDMockito.given;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -22,6 +23,7 @@ import webpagemanagementsystem.common.entity.YNEnum;
 import webpagemanagementsystem.user.dto.FindByEmailResponse;
 import webpagemanagementsystem.user.entity.SocialType;
 import webpagemanagementsystem.user.entity.Users;
+import webpagemanagementsystem.user.exception.DeleteUserException;
 import webpagemanagementsystem.user.exception.SocialUnauthorizedException;
 import webpagemanagementsystem.user.service.UserService;
 import webpagemanagementsystem.user.service.UserSocialService;
@@ -37,7 +39,7 @@ class UserControllerTest {
     @MockBean
     UserSocialService userSocialService;
 
-    @DisplayName("User API 소셜로그인 실패 - 인증 실패")
+    @DisplayName("User API 소셜로그인 실패 - 계정 삭제")
     @Test
     public void test() throws Exception {
 //        // given
@@ -45,16 +47,39 @@ class UserControllerTest {
 //        String socialType = "naver";
 //        String serverAccessToken = "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJtMDUyMTRAbmF2ZXIuY29tIiwiYXV0aCI6IlVTRVIiLCJleHAiOjE3MjExMzgyMTZ9.rnGotMlOJW75qeS5AMxn-wzRwgSZ4_Iq72ysLk-oNu4bB9o6aF6g4YFiyGHP1LUlhziPNnVyN45oZj6YcUFnTQ";
 //        given(userSocialService.socialLoginProgress(socialAccessToken, socialType))
-//            .willThrow(SocialUnauthorizedException.class);
-
-        // when & then
-//        mvc.perform(get("/user/social/"+ socialType))
+//            .willThrow(DeleteUserException.class);
+//
+//        // when & then
+//        mvc.perform(post("/user/social/"+ socialType))
 //            .andExpect(status().is4xxClientError())
 //            .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-//            .andExpect(jsonPath("$.userNo").value(3))
-//            .andExpect(jsonPath("$.name").value("박종훈"))
-//            .andExpect(jsonPath("$.email").value(email))
-//            .andExpect(jsonPath("$.picture").value(""));
+//            .andExpect(jsonPath("$.status").value("error"))
+//            .andExpect(jsonPath("$.data").value(null))
+//            .andExpect(jsonPath("$.message").value("이미 가입되어 있는 계정입니다. 소셜로그인여부: Y 소셜타입: naver"));
+    }
+
+    @DisplayName("User API 소셜로그인 실패 - 휴면 계정")
+    @Test
+    public void test2() throws Exception {
+
+    }
+
+    @DisplayName("User API 소셜로그인 실패 - 중복 회원가입")
+    @Test
+    public void test3() throws Exception {
+
+    }
+
+    @DisplayName("User API 소셜로그인 실패 - 소셜 인증실패")
+    @Test
+    public void test4() throws Exception {
+
+    }
+
+    @DisplayName("User API 소셜로그인 성공")
+    @Test
+    public void test5() throws Exception {
+
     }
 
 //    @DisplayName("User API 중 이메일로 계정 검색 실패")
