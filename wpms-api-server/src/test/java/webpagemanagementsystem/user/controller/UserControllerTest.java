@@ -43,11 +43,11 @@ class UserControllerTest {
     @Test
     public void test() throws Exception {
 //        // given
-//        String socialAccessToken = "AAAANsghieb_FT1ST1MsWN1catbSgmeFtyqk_fYH4nkiW79Hsd9n3za1zc5aA3rmCEupf-cNYDqm7V85X5zO7cFXEyI";
-//        String socialType = "naver";
-//        String serverAccessToken = "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJtMDUyMTRAbmF2ZXIuY29tIiwiYXV0aCI6IlVTRVIiLCJleHAiOjE3MjExMzgyMTZ9.rnGotMlOJW75qeS5AMxn-wzRwgSZ4_Iq72ysLk-oNu4bB9o6aF6g4YFiyGHP1LUlhziPNnVyN45oZj6YcUFnTQ";
-//        given(userSocialService.socialLoginProgress(socialAccessToken, socialType))
-//            .willThrow(DeleteUserException.class);
+        String socialAccessToken = "AAAANsghieb_FT1ST1MsWN1catbSgmeFtyqk_fYH4nkiW79Hsd9n3za1zc5aA3rmCEupf-cNYDqm7V85X5zO7cFXEyI";
+        String socialType = "naver";
+        String serverAccessToken = "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJtMDUyMTRAbmF2ZXIuY29tIiwiYXV0aCI6IlVTRVIiLCJleHAiOjE3MjExMzgyMTZ9.rnGotMlOJW75qeS5AMxn-wzRwgSZ4_Iq72ysLk-oNu4bB9o6aF6g4YFiyGHP1LUlhziPNnVyN45oZj6YcUFnTQ";
+        given(userSocialService.socialLoginProgress(socialAccessToken, socialType))
+            .willThrow(DeleteUserException.class);
 //
 //        // when & then
 //        mvc.perform(post("/user/social/"+ socialType))
