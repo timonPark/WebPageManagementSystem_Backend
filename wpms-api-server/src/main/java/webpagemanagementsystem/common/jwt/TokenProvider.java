@@ -18,7 +18,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 
 @Slf4j
-public sealed class TokenProvider permits AccessTokenProvider {
+public class TokenProvider {
 
   protected static final String AUTHORITIES_KEY = "auth";
   protected final String secret;

@@ -1,33 +1,23 @@
 package webpagemanagementsystem.user.service;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
-import java.util.Map;
 import java.util.NoSuchElementException;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import webpagemanagementsystem.common.entity.IsUseEnum;
 import webpagemanagementsystem.common.entity.YNEnum;
-import webpagemanagementsystem.common.jwt.AccessTokenProvider;
-import webpagemanagementsystem.common.variable.SocialProperties;
 import webpagemanagementsystem.user.dto.FindByEmailResponse;
-import webpagemanagementsystem.user.domain.KakaoSocialInfo;
 import webpagemanagementsystem.user.entity.SocialType;
 import webpagemanagementsystem.user.entity.Users;
 import webpagemanagementsystem.user.exception.DeleteUserException;
 import webpagemanagementsystem.user.exception.DuplicationRegisterException;
 import webpagemanagementsystem.user.exception.NoUseException;
-import webpagemanagementsystem.user.exception.SocialUnauthorizedException;
 import webpagemanagementsystem.user.repository.UsersRepository;
 
 import static org.mockito.BDDMockito.given;

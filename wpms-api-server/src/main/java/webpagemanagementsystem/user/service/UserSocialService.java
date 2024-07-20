@@ -1,6 +1,5 @@
 package webpagemanagementsystem.user.service;
 
-import java.util.Map;
 import webpagemanagementsystem.user.domain.SocialInfo;
 import webpagemanagementsystem.user.entity.Users;
 import webpagemanagementsystem.user.exception.DeleteUserException;
