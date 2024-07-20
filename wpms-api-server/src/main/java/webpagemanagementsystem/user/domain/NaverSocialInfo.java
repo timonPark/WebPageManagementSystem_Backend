@@ -1,7 +1,6 @@
 package webpagemanagementsystem.user.domain;
 
 import lombok.Data;
-import org.springframework.http.HttpStatusCode;
 import webpagemanagementsystem.common.entity.IsUseEnum;
 import webpagemanagementsystem.common.entity.YNEnum;
 import webpagemanagementsystem.user.entity.SocialType;
