@@ -7,7 +7,7 @@ import java.util.stream.Collectors;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 
-public final class AccessTokenProvider extends TokenProvider {
+public class AccessTokenProvider extends TokenProvider {
 
   public AccessTokenProvider(String secret, long tokenValidityInSeconds) {
     super(secret, tokenValidityInSeconds);
