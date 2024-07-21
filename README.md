@@ -16,16 +16,8 @@
 - DB: PostgreSQL
 - API Testing Tool: Postman
 
-## Sodical Login
-- URL: http://{baseurl}/user/social/{socialType}
-- Method: POST
-- Request Body
-```
-{
-  "accessToken" : {social Platform에서 발급받은 accessToken}
-}
-```
-- Response: accessToken
+## API 문서
+[소셜 로그인](https://github.com/timonPark/WebPageManagementSystem_Backend/tree/master/wiki/user/README.md)
 
 ## graphql Example
 1. 브라우저에 http://localhost:8080/graphiql를 넣으세요
