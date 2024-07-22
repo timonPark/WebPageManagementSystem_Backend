@@ -22,7 +22,7 @@ class UserRepositoryTest {
     UsersRepository userRepository;
 
     @Transactional
-    @DisplayName("Users_객체_저장_성공")
+    @DisplayName("Users_객체_저장_성공 - 회원가입")
     @Test
     public void test1() {
         // given

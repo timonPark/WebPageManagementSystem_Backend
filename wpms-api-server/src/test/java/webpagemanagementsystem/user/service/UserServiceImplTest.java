@@ -250,4 +250,46 @@ class UserServiceImplTest {
             userService.validateUserIsUse(expectResultUser);
         });
     }
+
+    @DisplayName("이메일 중복여부 검사 - 중복")
+    @Test
+    void test15() {
+
+    }
+
+    @DisplayName("이메일 중복여부 검사 - 중복X")
+    @Test
+    void test16() {
+
+    }
+
+    @DisplayName("회원가입 실패 - 유효성검사(이름, 이메일, 패스워드)")
+    @Test
+    void test17() {
+
+    }
+
+    @DisplayName("회원가입 성공")
+    @Test
+    void test18() {
+
+    }
+
+    @DisplayName("로그인 실패 - 존재하지 않는 회원")
+    @Test
+    void test19() {
+
+    }
+
+    @DisplayName("로그인 실패 - 아이디 패스워드 불일치")
+    @Test
+    void test20() {
+
+    }
+
+    @DisplayName("로그인 성공")
+    @Test
+    void test21() {
+
+    }
 }

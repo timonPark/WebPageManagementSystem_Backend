@@ -190,6 +190,29 @@ class UserControllerTest {
             .andExpect(jsonPath("$.status").value("success"))
             .andExpect(jsonPath("$.data.accesstoken").value(accessToken))
             .andExpect(jsonPath("$.message").isEmpty());
+    }
+
+    @DisplayName("중복이메일 검사 - 일치X")
+    @Test
+    public void test6() throws Exception {
+
+    }
+
+    @DisplayName("중복이메일 검사 - 일치")
+    @Test
+    public void test7() throws Exception {
+
+    }
+
+    @DisplayName("회원가입 실패")
+    @Test
+    public void test8() throws Exception {
+
+    }
+
+    @DisplayName("회원가입 성공")
+    @Test
+    public void test9() throws Exception {
 
     }
 }
