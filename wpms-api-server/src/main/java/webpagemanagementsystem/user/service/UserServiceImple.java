@@ -3,10 +3,13 @@ package webpagemanagementsystem.user.service;
 import java.util.List;
 import java.util.NoSuchElementException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import webpagemanagementsystem.common.entity.IsUseEnum;
 import webpagemanagementsystem.common.entity.YNEnum;
 import webpagemanagementsystem.user.dto.FindByEmailResponse;
+import webpagemanagementsystem.user.dto.SignUpReqDto;
+import webpagemanagementsystem.user.dto.SignUpResDto;
 import webpagemanagementsystem.user.entity.Users;
 import webpagemanagementsystem.user.exception.DeleteUserException;
 import webpagemanagementsystem.user.exception.DuplicationRegisterException;
@@ -17,6 +20,8 @@ import webpagemanagementsystem.user.repository.UsersRepository;
 public class UserServiceImple implements UserService{
 
   private final UsersRepository usersRepository;
+
+  private final PasswordEncoder passwordEncoder;
 
   @Override
   public Users findByEmailAndIsUseY(String email) {
@@ -68,5 +73,29 @@ public class UserServiceImple implements UserService{
     if (user.getIsUse().name().equals(IsUseEnum.D.name())) {
       throw new DeleteUserException();
     }
+  }
+
+  @Override
+  public SignUpResDto signUp(SignUpReqDto signUpReqDto) {
+    return convertUsersToSignUpResDto(
+          this.usersRepository.save(
+            Users.builder()
+                .name(signUpReqDto.getName())
+                .email(signUpReqDto.getEmail())
+                .password(passwordEncoder.encode(signUpReqDto.getPassword()))
+                .isSocial(YNEnum.N)
+                .isUse(IsUseEnum.U)
+                .build()
+          )
+    );
+  }
+
+  @Override
+  public SignUpResDto convertUsersToSignUpResDto(Users users) {
+    return SignUpResDto.builder()
+        .userNo(users.getUserNo())
+        .name(users.getName())
+        .email(users.getEmail())
+        .build();
   }
 }
