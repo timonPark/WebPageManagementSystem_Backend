@@ -2,6 +2,8 @@ package webpagemanagementsystem.user.service;
 
 import java.util.List;
 import webpagemanagementsystem.user.dto.FindByEmailResponse;
+import webpagemanagementsystem.user.dto.SignUpReqDto;
+import webpagemanagementsystem.user.dto.SignUpResDto;
 import webpagemanagementsystem.user.entity.Users;
 import webpagemanagementsystem.user.exception.DeleteUserException;
 import webpagemanagementsystem.user.exception.DuplicationRegisterException;
@@ -19,4 +21,8 @@ public interface UserService {
         throws DuplicationRegisterException;
 
     public void validateUserIsUse(Users user) throws NoUseException, DeleteUserException;
+
+    public SignUpResDto signUp(SignUpReqDto signUpReqDto);
+
+    public SignUpResDto convertUsersToSignUpResDto(Users users);
 }
