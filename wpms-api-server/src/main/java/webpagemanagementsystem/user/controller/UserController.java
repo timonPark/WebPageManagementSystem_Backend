@@ -10,13 +10,16 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import webpagemanagementsystem.common.response.ApiResponse;
+import webpagemanagementsystem.user.dto.LoginReqDto;
 import webpagemanagementsystem.user.dto.SignUpReqDto;
 import webpagemanagementsystem.user.dto.SignUpResDto;
 import webpagemanagementsystem.user.dto.SocialRequestDto;
-import webpagemanagementsystem.user.dto.SocialResponseDto;
+import webpagemanagementsystem.user.dto.AuthenticationSuccessfulDto;
+import webpagemanagementsystem.user.exception.AuthenticationFailException;
 import webpagemanagementsystem.user.exception.DeleteUserException;
 import webpagemanagementsystem.user.exception.DuplicationRegisterException;
 import webpagemanagementsystem.user.exception.NoUseException;
+import webpagemanagementsystem.user.exception.NonJoinUserException;
 import webpagemanagementsystem.user.exception.SocialUnauthorizedException;
 import webpagemanagementsystem.user.service.UserService;
 import webpagemanagementsystem.user.service.UserSocialService;
@@ -32,15 +35,22 @@ public class UserController {
 
     @PostMapping("/social/{socialType}")
     @ResponseStatus(HttpStatus.OK)
-    public ApiResponse<SocialResponseDto> socialLogin(@PathVariable("socialType") String socialType, @RequestBody SocialRequestDto socialRequestDto)
+    public ApiResponse<AuthenticationSuccessfulDto> socialLogin(@PathVariable("socialType") String socialType, @RequestBody SocialRequestDto socialRequestDto)
         throws SocialUnauthorizedException, DuplicationRegisterException, DeleteUserException, NoUseException {
         String accessToken = userSocialService.socialLoginProgress(socialRequestDto.getAccesstoken(), socialType);
-        return  ApiResponse.createSuccess(new SocialResponseDto(accessToken));
+        return  ApiResponse.createSuccess(new AuthenticationSuccessfulDto(accessToken));
     }
 
     @PostMapping("/signUp")
     @ResponseStatus(HttpStatus.OK)
     public ApiResponse<SignUpResDto> signUp(final @Valid @RequestBody SignUpReqDto signUpReqDto) {
         return ApiResponse.createSuccess( userService.signUp(signUpReqDto));
+    }
+
+    @PostMapping("/login")
+    @ResponseStatus(HttpStatus.OK)
+    public ApiResponse<AuthenticationSuccessfulDto> login(final @Valid @RequestBody LoginReqDto loginReqDto)
+        throws AuthenticationFailException, NonJoinUserException {
+        return ApiResponse.createSuccess(new AuthenticationSuccessfulDto(userService.login(loginReqDto)));
     }
 }

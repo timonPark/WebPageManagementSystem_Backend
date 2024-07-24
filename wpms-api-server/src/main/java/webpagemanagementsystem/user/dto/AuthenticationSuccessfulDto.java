@@ -7,6 +7,6 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class SocialResponseDto {
+public class AuthenticationSuccessfulDto {
   private String accesstoken;
 }

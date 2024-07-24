@@ -3,17 +3,24 @@ package webpagemanagementsystem.user.service;
 import java.util.List;
 import java.util.NoSuchElementException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import webpagemanagementsystem.common.entity.IsUseEnum;
 import webpagemanagementsystem.common.entity.YNEnum;
+import webpagemanagementsystem.common.jwt.AccessTokenProvider;
 import webpagemanagementsystem.user.dto.FindByEmailResponse;
+import webpagemanagementsystem.user.dto.LoginReqDto;
 import webpagemanagementsystem.user.dto.SignUpReqDto;
 import webpagemanagementsystem.user.dto.SignUpResDto;
 import webpagemanagementsystem.user.entity.Users;
+import webpagemanagementsystem.user.exception.AuthenticationFailException;
 import webpagemanagementsystem.user.exception.DeleteUserException;
 import webpagemanagementsystem.user.exception.DuplicationRegisterException;
 import webpagemanagementsystem.user.exception.NoUseException;
+import webpagemanagementsystem.user.exception.NonJoinUserException;
 import webpagemanagementsystem.user.repository.UsersRepository;
 @Service
 @RequiredArgsConstructor
@@ -22,6 +29,10 @@ public class UserServiceImple implements UserService{
   private final UsersRepository usersRepository;
 
   private final PasswordEncoder passwordEncoder;
+
+  private final AuthenticationManagerBuilder authenticationManagerBuilder;
+
+  private final AccessTokenProvider accessTokenProvider;
 
   @Override
   public Users findByEmailAndIsUseY(String email) {
@@ -97,5 +108,20 @@ public class UserServiceImple implements UserService{
         .name(users.getName())
         .email(users.getEmail())
         .build();
+  }
+
+  @Override
+  public String login(LoginReqDto loginReqDto)
+      throws NonJoinUserException, AuthenticationFailException {
+    if (findByEmailAndIsUseY(loginReqDto.getEmail()) == null) {
+      throw new NonJoinUserException();
+    }
+    try {
+      UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(loginReqDto.getEmail(), loginReqDto.getPassword());
+      Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
+      return accessTokenProvider.createToken(authentication);
+    } catch (Exception e) {
+      throw new AuthenticationFailException();
+    }
   }
 }

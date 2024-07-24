@@ -2,12 +2,15 @@ package webpagemanagementsystem.user.service;
 
 import java.util.List;
 import webpagemanagementsystem.user.dto.FindByEmailResponse;
+import webpagemanagementsystem.user.dto.LoginReqDto;
 import webpagemanagementsystem.user.dto.SignUpReqDto;
 import webpagemanagementsystem.user.dto.SignUpResDto;
 import webpagemanagementsystem.user.entity.Users;
+import webpagemanagementsystem.user.exception.AuthenticationFailException;
 import webpagemanagementsystem.user.exception.DeleteUserException;
 import webpagemanagementsystem.user.exception.DuplicationRegisterException;
 import webpagemanagementsystem.user.exception.NoUseException;
+import webpagemanagementsystem.user.exception.NonJoinUserException;
 
 public interface UserService {
     public Users findByEmailAndIsUseY(String email);
@@ -25,4 +28,7 @@ public interface UserService {
     public SignUpResDto signUp(SignUpReqDto signUpReqDto);
 
     public SignUpResDto convertUsersToSignUpResDto(Users users);
+
+    public String login(LoginReqDto loginReqDto)
+        throws NonJoinUserException, AuthenticationFailException;
 }
