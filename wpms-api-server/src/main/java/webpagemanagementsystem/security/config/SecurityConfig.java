@@ -37,8 +37,7 @@ public class SecurityConfig {
             httpSecuritySessionManagementConfigurer.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
         )
         .authorizeHttpRequests(registry -> // api path
-            registry.requestMatchers("/user/email/**").permitAll()
-                .requestMatchers("user/social/**").permitAll()
+            registry.requestMatchers("/user/**").permitAll()
         )
         .authorizeHttpRequests(registry -> // api path
             registry.requestMatchers("/graphiql/**").permitAll()
