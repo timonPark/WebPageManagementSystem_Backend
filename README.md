@@ -18,6 +18,7 @@
 
 ## API 문서
 [소셜 로그인](https://github.com/timonPark/WebPageManagementSystem_Backend/tree/master/wiki/user/README.md)
+[로그인]
 
 ## graphql Example
 1. 브라우저에 http://localhost:8080/graphiql를 넣으세요
