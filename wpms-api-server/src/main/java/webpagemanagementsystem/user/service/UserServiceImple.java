@@ -11,10 +11,7 @@ import org.springframework.stereotype.Service;
 import webpagemanagementsystem.common.entity.IsUseEnum;
 import webpagemanagementsystem.common.entity.YNEnum;
 import webpagemanagementsystem.common.jwt.AccessTokenProvider;
-import webpagemanagementsystem.user.dto.FindByEmailResponse;
-import webpagemanagementsystem.user.dto.LoginReqDto;
-import webpagemanagementsystem.user.dto.SignUpReqDto;
-import webpagemanagementsystem.user.dto.SignUpResDto;
+import webpagemanagementsystem.user.dto.*;
 import webpagemanagementsystem.user.entity.Users;
 import webpagemanagementsystem.user.exception.AuthenticationFailException;
 import webpagemanagementsystem.user.exception.DeleteUserException;
@@ -47,6 +44,15 @@ public class UserServiceImple implements UserService{
   @Override
   public List<Users> findByEmail(String email) {
     return usersRepository.findByEmail(email);
+  }
+
+  @Override
+  public boolean checkEmail(String email) throws NoUseException {
+    var result = findByEmailAndIsUseY(email);
+    if (result != null) {
+      return true;
+    }
+    throw new NoUseException();
   }
 
   @Override

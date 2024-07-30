@@ -3,18 +3,9 @@ package webpagemanagementsystem.user.controller;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseStatus;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import webpagemanagementsystem.common.response.ApiResponse;
-import webpagemanagementsystem.user.dto.LoginReqDto;
-import webpagemanagementsystem.user.dto.SignUpReqDto;
-import webpagemanagementsystem.user.dto.SignUpResDto;
-import webpagemanagementsystem.user.dto.SocialRequestDto;
-import webpagemanagementsystem.user.dto.AuthenticationSuccessfulDto;
+import webpagemanagementsystem.user.dto.*;
 import webpagemanagementsystem.user.exception.AuthenticationFailException;
 import webpagemanagementsystem.user.exception.DeleteUserException;
 import webpagemanagementsystem.user.exception.DuplicationRegisterException;
@@ -39,6 +30,12 @@ public class UserController {
         throws SocialUnauthorizedException, DuplicationRegisterException, DeleteUserException, NoUseException {
         String accessToken = userSocialService.socialLoginProgress(socialRequestDto.getAccesstoken(), socialType);
         return  ApiResponse.createSuccess(new AuthenticationSuccessfulDto(accessToken));
+    }
+
+    @GetMapping("/checkEmail/{email}")
+    @ResponseStatus(HttpStatus.OK)
+    public ApiResponse<Boolean> checkEmail(@PathVariable("email") String email) throws NoUseException {
+        return ApiResponse.createSuccess(userService.checkEmail(email));
     }
 
     @PostMapping("/signUp")

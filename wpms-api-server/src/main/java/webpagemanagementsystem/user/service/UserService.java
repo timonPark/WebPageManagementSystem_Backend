@@ -1,10 +1,10 @@
 package webpagemanagementsystem.user.service;
 
 import java.util.List;
-import webpagemanagementsystem.user.dto.FindByEmailResponse;
-import webpagemanagementsystem.user.dto.LoginReqDto;
-import webpagemanagementsystem.user.dto.SignUpReqDto;
-import webpagemanagementsystem.user.dto.SignUpResDto;
+
+import org.springframework.web.bind.annotation.PathVariable;
+import webpagemanagementsystem.common.response.ApiResponse;
+import webpagemanagementsystem.user.dto.*;
 import webpagemanagementsystem.user.entity.Users;
 import webpagemanagementsystem.user.exception.AuthenticationFailException;
 import webpagemanagementsystem.user.exception.DeleteUserException;
@@ -16,6 +16,8 @@ public interface UserService {
     public Users findByEmailAndIsUseY(String email);
 
     public List<Users> findByEmail(String email);
+
+    public boolean checkEmail(String email) throws NoUseException;
     public FindByEmailResponse convertUsersToFindByEmailResponse(Users user);
 
     public Users createUser(Users user);
