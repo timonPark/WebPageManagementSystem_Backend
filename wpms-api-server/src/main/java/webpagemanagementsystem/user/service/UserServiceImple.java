@@ -13,11 +13,7 @@ import webpagemanagementsystem.common.entity.YNEnum;
 import webpagemanagementsystem.common.jwt.AccessTokenProvider;
 import webpagemanagementsystem.user.dto.*;
 import webpagemanagementsystem.user.entity.Users;
-import webpagemanagementsystem.user.exception.AuthenticationFailException;
-import webpagemanagementsystem.user.exception.DeleteUserException;
-import webpagemanagementsystem.user.exception.DuplicationRegisterException;
-import webpagemanagementsystem.user.exception.NoUseException;
-import webpagemanagementsystem.user.exception.NonJoinUserException;
+import webpagemanagementsystem.user.exception.*;
 import webpagemanagementsystem.user.repository.UsersRepository;
 @Service
 @RequiredArgsConstructor
@@ -47,12 +43,12 @@ public class UserServiceImple implements UserService{
   }
 
   @Override
-  public boolean checkEmail(String email) throws NoUseException {
+  public boolean checkEmail(String email) throws DuplicateEmailException {
     var result = findByEmailAndIsUseY(email);
     if (result != null) {
       return true;
     }
-    throw new NoUseException();
+    throw new DuplicateEmailException();
   }
 
   @Override
@@ -94,17 +90,16 @@ public class UserServiceImple implements UserService{
 
   @Override
   public SignUpResDto signUp(SignUpReqDto signUpReqDto) {
-    return convertUsersToSignUpResDto(
-          this.usersRepository.save(
+    Users user = this.usersRepository.save(
             Users.builder()
-                .name(signUpReqDto.getName())
-                .email(signUpReqDto.getEmail())
-                .password(passwordEncoder.encode(signUpReqDto.getPassword()))
-                .isSocial(YNEnum.N)
-                .isUse(IsUseEnum.U)
-                .build()
-          )
+                    .name(signUpReqDto.getName())
+                    .email(signUpReqDto.getEmail())
+                    .password(passwordEncoder.encode(signUpReqDto.getPassword()))
+                    .isSocial(YNEnum.N)
+                    .isUse(IsUseEnum.U)
+                    .build()
     );
+    return convertUsersToSignUpResDto(user);
   }
 
   @Override
