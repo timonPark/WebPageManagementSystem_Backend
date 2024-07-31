@@ -1,8 +1,7 @@
 package webpagemanagementsystem.user.service;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.NoSuchElementException;
+import java.util.*;
+
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -10,16 +9,22 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import webpagemanagementsystem.common.entity.IsUseEnum;
 import webpagemanagementsystem.common.entity.YNEnum;
+import webpagemanagementsystem.common.jwt.AccessTokenProvider;
 import webpagemanagementsystem.user.dto.FindByEmailResponse;
+import webpagemanagementsystem.user.dto.LoginReqDto;
+import webpagemanagementsystem.user.dto.SignUpReqDto;
+import webpagemanagementsystem.user.dto.SignUpResDto;
 import webpagemanagementsystem.user.entity.SocialType;
 import webpagemanagementsystem.user.entity.Users;
-import webpagemanagementsystem.user.exception.DeleteUserException;
-import webpagemanagementsystem.user.exception.DuplicationRegisterException;
-import webpagemanagementsystem.user.exception.NoUseException;
+import webpagemanagementsystem.user.exception.*;
 import webpagemanagementsystem.user.repository.UsersRepository;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.assertj.core.api.Assertions.*;
 
@@ -29,6 +34,16 @@ class UserServiceImplTest {
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
+    @Autowired
+    private AuthenticationManagerBuilder authenticationManagerBuilder;
+
+    @Autowired
+    private AccessTokenProvider accessTokenProvider;
+
 
     @MockBean(name = "usersRepository")
     private UsersRepository usersRepository;
@@ -253,13 +268,37 @@ class UserServiceImplTest {
 
     @DisplayName("이메일 중복여부 검사 - 중복")
     @Test
-    void test15() {
+    void test15() throws DuplicateEmailException {
+        // given
+        String email = "m05214@naver.com";
+        given(userService.findByEmailAndIsUseY(email)).willThrow(new NoSuchElementException());
 
+        // when & then
+        Assertions.assertThrows(DuplicateEmailException.class, () -> {
+            userService.checkEmail(email);
+        });
     }
 
     @DisplayName("이메일 중복여부 검사 - 중복X")
     @Test
-    void test16() {
+    void test16() throws DuplicateEmailException {
+        // given
+        String email = "m05214@naver.com";
+        Users user = Users.builder()
+                .userNo(1L)
+                .email(email)
+                .password("password")
+                .isSocial(YNEnum.Y)
+                .isUse(IsUseEnum.U)
+                .build();
+        given(usersRepository.findByEmailAndIsUse(email,IsUseEnum.U)).willReturn(Collections.singletonList(user));
+
+        // when
+        boolean result = userService.checkEmail(email);
+
+        // then
+        Assertions.assertTrue(result);
+
 
     }
 
@@ -273,23 +312,86 @@ class UserServiceImplTest {
     @Test
     void test18() {
 
+        // given
+        String email = "m05214@naver.com";
+        Users user = Users.builder()
+                .email(email)
+                .name("박종훈")
+                .password("password")
+                .isSocial(YNEnum.Y)
+                .isUse(IsUseEnum.U)
+                .build();
+        Users resultUser = Users.builder()
+                .userNo(2L)
+                .name("박종훈")
+                .email(email)
+                .password("$2a$10$OJmFXX38e0NsM9gx/8uefuNQVNrXO/sxsIIueij2Ql3/s03y3/YSi")
+                .isSocial(YNEnum.Y)
+                .isUse(IsUseEnum.U)
+                .build();
+        given(usersRepository.save(any(Users.class))).willReturn(resultUser);
+        // when
+        SignUpResDto testResult = userService.signUp(new SignUpReqDto(user.getName(), user.getEmail(), user.getPassword()));
+
+        // then
+        assertThat(testResult).isEqualTo(SignUpResDto.builder()
+                .userNo(resultUser.getUserNo())
+                .name(resultUser.getName())
+                .email(resultUser.getEmail())
+                .build());
     }
 
     @DisplayName("로그인 실패 - 존재하지 않는 회원")
     @Test
     void test19() {
+        // given
+        String email = "aaaa@naver.com";
+        given(userService.findByEmailAndIsUseY(email)).willThrow(new NoSuchElementException());
 
+        // when & then
+        Assertions.assertThrows(NonJoinUserException.class, () -> {
+            userService.login(new LoginReqDto(email, "password"));
+        });
     }
 
     @DisplayName("로그인 실패 - 아이디 패스워드 불일치")
     @Test
     void test20() {
+        String email = "m05214@naver.com";
+        LoginReqDto loginReqDto = new LoginReqDto(email, "pass");
+        Users resultUser = Users.builder()
+                .userNo(2L)
+                .name("박종훈")
+                .email(email)
+                .password("$2a$10$OJmFXX38e0NsM9gx/8uefuNQVNrXO/sxsIIueij2Ql3/s03y3/YSi")
+                .isSocial(YNEnum.Y)
+                .isUse(IsUseEnum.U)
+                .build();
+        given(usersRepository.findByEmailAndIsUse(any(String.class), any(IsUseEnum.class))).willReturn(Collections.singletonList(resultUser));
 
+        Assertions.assertThrows(AuthenticationFailException.class, () -> {
+            userService.login(loginReqDto);
+        });
     }
 
     @DisplayName("로그인 성공")
     @Test
-    void test21() {
+    void test21() throws AuthenticationFailException, NonJoinUserException {
+        String email = "m05214@naver.com";
+        LoginReqDto loginReqDto = new LoginReqDto(email, "password");
+        Users resultUser = Users.builder()
+                .userNo(2L)
+                .name("박종훈")
+                .email(email)
+                .password("$2a$10$OJmFXX38e0NsM9gx/8uefuNQVNrXO/sxsIIueij2Ql3/s03y3/YSi")
+                .isSocial(YNEnum.N)
+                .isUse(IsUseEnum.U)
+                .build();
+        given(usersRepository.findByEmailAndIsUse(any(String.class), any(IsUseEnum.class))).willReturn(Collections.singletonList(resultUser));
 
+        String accessToken = userService.login(loginReqDto);
+
+        assertThat(accessToken).isNotEmpty();
+        assertThat(accessToken).isInstanceOf(String.class);
     }
 }

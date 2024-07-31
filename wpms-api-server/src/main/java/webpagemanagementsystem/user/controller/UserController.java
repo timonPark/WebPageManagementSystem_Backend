@@ -6,12 +6,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import webpagemanagementsystem.common.response.ApiResponse;
 import webpagemanagementsystem.user.dto.*;
-import webpagemanagementsystem.user.exception.AuthenticationFailException;
-import webpagemanagementsystem.user.exception.DeleteUserException;
-import webpagemanagementsystem.user.exception.DuplicationRegisterException;
-import webpagemanagementsystem.user.exception.NoUseException;
-import webpagemanagementsystem.user.exception.NonJoinUserException;
-import webpagemanagementsystem.user.exception.SocialUnauthorizedException;
+import webpagemanagementsystem.user.exception.*;
 import webpagemanagementsystem.user.service.UserService;
 import webpagemanagementsystem.user.service.UserSocialService;
 
@@ -34,7 +29,7 @@ public class UserController {
 
     @GetMapping("/checkEmail/{email}")
     @ResponseStatus(HttpStatus.OK)
-    public ApiResponse<Boolean> checkEmail(@PathVariable("email") String email) throws NoUseException {
+    public ApiResponse<Boolean> checkEmail(@PathVariable("email") String email) throws DuplicateEmailException {
         return ApiResponse.createSuccess(userService.checkEmail(email));
     }
 
