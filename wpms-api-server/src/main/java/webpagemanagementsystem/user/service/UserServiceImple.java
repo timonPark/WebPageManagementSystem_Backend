@@ -45,7 +45,7 @@ public class UserServiceImple implements UserService{
   @Override
   public boolean checkEmail(String email) throws DuplicateEmailException {
     var result = findByEmailAndIsUseY(email);
-    if (result != null) {
+    if (result == null) {
       return true;
     }
     throw new DuplicateEmailException();
@@ -89,7 +89,13 @@ public class UserServiceImple implements UserService{
   }
 
   @Override
-  public SignUpResDto signUp(SignUpReqDto signUpReqDto) {
+  public SignUpResDto signUp(SignUpReqDto signUpReqDto) throws DuplicateEmailException {
+    try {
+      checkEmail(signUpReqDto.getEmail());
+    } catch (Exception e) {
+      throw new DuplicateEmailException();
+    }
+
     Users user = this.usersRepository.save(
             Users.builder()
                     .name(signUpReqDto.getName())

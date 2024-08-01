@@ -35,8 +35,9 @@ public class UserController {
 
     @PostMapping("/signUp")
     @ResponseStatus(HttpStatus.OK)
-    public ApiResponse<SignUpResDto> signUp(final @Valid @RequestBody SignUpReqDto signUpReqDto) {
-        return ApiResponse.createSuccess( userService.signUp(signUpReqDto));
+    public ApiResponse<SignUpResDto> signUp(final @Valid @RequestBody SignUpReqDto signUpReqDto) throws DuplicateEmailException {
+        var result = userService.signUp(signUpReqDto);
+        return ApiResponse.createSuccess(result);
     }
 
     @PostMapping("/login")

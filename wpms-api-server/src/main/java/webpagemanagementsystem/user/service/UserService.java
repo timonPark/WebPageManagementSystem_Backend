@@ -21,7 +21,7 @@ public interface UserService {
 
     public void validateUserIsUse(Users user) throws NoUseException, DeleteUserException;
 
-    public SignUpResDto signUp(SignUpReqDto signUpReqDto);
+    public SignUpResDto signUp(SignUpReqDto signUpReqDto) throws DuplicateEmailException;
 
     public SignUpResDto convertUsersToSignUpResDto(Users users);
 

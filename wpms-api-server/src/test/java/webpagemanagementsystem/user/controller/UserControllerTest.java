@@ -2,6 +2,7 @@ package webpagemanagementsystem.user.controller;
 
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
@@ -22,13 +23,12 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 import webpagemanagementsystem.common.entity.YNEnum;
 import webpagemanagementsystem.common.jwt.AccessTokenProvider;
+import webpagemanagementsystem.user.dto.SignUpReqDto;
 import webpagemanagementsystem.user.dto.SocialRequestDto;
 import webpagemanagementsystem.user.entity.SocialType;
 import webpagemanagementsystem.user.entity.Users;
-import webpagemanagementsystem.user.exception.DeleteUserException;
-import webpagemanagementsystem.user.exception.DuplicationRegisterException;
-import webpagemanagementsystem.user.exception.NoUseException;
-import webpagemanagementsystem.user.exception.SocialUnauthorizedException;
+import webpagemanagementsystem.user.exception.*;
+import webpagemanagementsystem.user.service.UserService;
 import webpagemanagementsystem.user.service.UserSocialService;
 
 @ExtendWith(SpringExtension.class)
@@ -41,6 +41,9 @@ class UserControllerTest {
 
     @MockBean
     UserSocialService userSocialService;
+
+    @MockBean
+    UserService userService;
 
     @MockBean
     private AccessTokenProvider accessTokenProvider;
@@ -192,21 +195,80 @@ class UserControllerTest {
             .andExpect(jsonPath("$.message").isEmpty());
     }
 
-    @DisplayName("중복이메일 검사 - 일치X")
+    /**
+     * {
+     * "status": "error",
+     * "data": null,
+     * "message": "이미 가입된 이메일 입니다"
+     * }
+     * @throws Exception
+     */
+
+
+    @DisplayName("중복이메일 검사 - 이미 존재")
     @Test
     public void test6() throws Exception {
-
+        String email = "m05214@naver.com";
+        // given
+        when(userService.checkEmail(email)).thenThrow(new DuplicateEmailException());
+        // when
+        mvc.perform(
+                get("/user/checkEmail/"+email)
+        ).andExpect(status().is4xxClientError())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.status").value("error"))
+                .andExpect(jsonPath("$.data").isEmpty())
+                .andExpect(jsonPath("$.message").value("이미 가입된 이메일 입니다"));
     }
 
-    @DisplayName("중복이메일 검사 - 일치")
+    /**
+     * {
+     * "status": "success",
+     * "data": true,
+     * "message": null
+     * }
+     * @throws Exception
+     */
+
+    @DisplayName("중복이메일 검사 - 중복없음")
     @Test
     public void test7() throws Exception {
+        String email = "m05217@naver.com";
+        // given
+        when(userService.checkEmail(email)).thenReturn(true);
 
+        // when & then
+        mvc.perform(get("/user/checkEmail/"+email))
+                .andExpect(status().is2xxSuccessful())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.status").value("success"))
+                .andExpect(jsonPath("$.data").value(true))
+                .andExpect(jsonPath("$.message").isEmpty());
     }
 
-    @DisplayName("회원가입 실패")
+    @DisplayName("회원가입 실패 - 이메일 중복")
     @Test
     public void test8() throws Exception {
+        String email = "m05217@naver.com";
+        // given
+        SignUpReqDto reqDto = new SignUpReqDto("박종훈", "m05214@naver.com", "password");
+        when(userService.checkEmail(email)).thenThrow(new DuplicateEmailException());
+        when(userService.signUp(reqDto)).thenThrow(new DuplicateEmailException());
+
+        String content = objectMapper.writeValueAsString(reqDto);
+
+        // when & then
+        mvc.perform(
+                post("/user/signUp")
+                    .content(content)
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .accept(MediaType.APPLICATION_JSON)
+                )
+                .andExpect(status().is4xxClientError())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.status").value("error"))
+                .andExpect(jsonPath("$.data").isEmpty())
+                .andExpect(jsonPath("$.message").value("이미 가입된 이메일 입니다"));
 
     }
 

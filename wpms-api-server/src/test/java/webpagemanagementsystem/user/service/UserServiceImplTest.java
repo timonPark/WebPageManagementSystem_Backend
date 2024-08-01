@@ -271,9 +271,15 @@ class UserServiceImplTest {
     void test15() throws DuplicateEmailException {
         // given
         String email = "m05214@naver.com";
-        given(userService.findByEmailAndIsUseY(email)).willThrow(new NoSuchElementException());
+        Users user = Users.builder()
+                .userNo(1L)
+                .email(email)
+                .password("password")
+                .isSocial(YNEnum.Y)
+                .isUse(IsUseEnum.U)
+                .build();
+        given(usersRepository.findByEmailAndIsUse(email,IsUseEnum.U)).willReturn(Collections.singletonList(user));
 
-        // when & then
         Assertions.assertThrows(DuplicateEmailException.class, () -> {
             userService.checkEmail(email);
         });
@@ -284,33 +290,38 @@ class UserServiceImplTest {
     void test16() throws DuplicateEmailException {
         // given
         String email = "m05214@naver.com";
-        Users user = Users.builder()
-                .userNo(1L)
-                .email(email)
-                .password("password")
-                .isSocial(YNEnum.Y)
-                .isUse(IsUseEnum.U)
-                .build();
-        given(usersRepository.findByEmailAndIsUse(email,IsUseEnum.U)).willReturn(Collections.singletonList(user));
+
+        given(userService.findByEmailAndIsUseY(email)).willThrow(new NoSuchElementException());
 
         // when
         boolean result = userService.checkEmail(email);
 
         // then
         Assertions.assertTrue(result);
-
-
     }
 
-    @DisplayName("회원가입 실패 - 유효성검사(이름, 이메일, 패스워드)")
+    @DisplayName("회원가입 실패 - 이메일 중복")
     @Test
     void test17() {
+        // given
+        String email = "m05214@naver.com";
+        Users user = Users.builder()
+                .email(email)
+                .name("박종훈")
+                .password("password")
+                .isSocial(YNEnum.Y)
+                .isUse(IsUseEnum.U)
+                .build();
+        given(usersRepository.findByEmailAndIsUse(email,IsUseEnum.U)).willReturn(Collections.singletonList(user));
 
+        Assertions.assertThrows(DuplicateEmailException.class, () -> {
+            userService.signUp(new SignUpReqDto(user.getName(), user.getEmail(), user.getPassword()));
+        });
     }
 
     @DisplayName("회원가입 성공")
     @Test
-    void test18() {
+    void test18() throws DuplicateEmailException {
 
         // given
         String email = "m05214@naver.com";
@@ -329,6 +340,7 @@ class UserServiceImplTest {
                 .isSocial(YNEnum.Y)
                 .isUse(IsUseEnum.U)
                 .build();
+        given(userService.findByEmailAndIsUseY(email)).willThrow(new NoSuchElementException());
         given(usersRepository.save(any(Users.class))).willReturn(resultUser);
         // when
         SignUpResDto testResult = userService.signUp(new SignUpReqDto(user.getName(), user.getEmail(), user.getPassword()));

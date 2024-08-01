@@ -37,4 +37,9 @@ public class UserExceptionHandler {
   public ResponseEntity<ApiResponse<?>> handleAuthenticationFailException(Exception exception) {
     return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(ApiResponse.createError(exception.getMessage()));
   }
+
+  @ExceptionHandler(DuplicateEmailException.class)
+  public ResponseEntity<ApiResponse<?>> handleDuplicateEmailException(Exception exception) {
+    return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ApiResponse.createError(exception.getMessage()));
+  }
 }
