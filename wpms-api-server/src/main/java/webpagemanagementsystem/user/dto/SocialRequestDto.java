@@ -8,6 +8,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class SocialRequestDto {
-  private String accesstoken;
+  private String accessToken;
 
 }
