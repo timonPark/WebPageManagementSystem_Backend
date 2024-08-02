@@ -8,5 +8,5 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class AuthenticationSuccessfulDto {
-  private String accesstoken;
+  private String accessToken;
 }

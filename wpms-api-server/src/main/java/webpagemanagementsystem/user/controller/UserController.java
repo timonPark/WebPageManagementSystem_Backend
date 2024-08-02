@@ -23,7 +23,7 @@ public class UserController {
     @ResponseStatus(HttpStatus.OK)
     public ApiResponse<AuthenticationSuccessfulDto> socialLogin(@PathVariable("socialType") String socialType, @RequestBody SocialRequestDto socialRequestDto)
         throws SocialUnauthorizedException, DuplicationRegisterException, DeleteUserException, NoUseException {
-        String accessToken = userSocialService.socialLoginProgress(socialRequestDto.getAccesstoken(), socialType);
+        String accessToken = userSocialService.socialLoginProgress(socialRequestDto.getAccessToken(), socialType);
         return  ApiResponse.createSuccess(new AuthenticationSuccessfulDto(accessToken));
     }
 
