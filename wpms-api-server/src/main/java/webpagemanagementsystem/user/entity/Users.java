@@ -54,7 +54,7 @@ public class Users extends BaseTimeEntity {
     private String picture;
 
     @Column(length = 1, nullable = false)
-    @ColumnDefault("'Y'")
+    @ColumnDefault("'U'")
     @Enumerated(EnumType.STRING)
     private IsUseEnum isUse;
 
