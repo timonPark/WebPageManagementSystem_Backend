@@ -1,8 +1,4 @@
 type Query {
+    menus: [Menu]
     shows(titleFilter: String): [Show]
-}
-
-type Show {
-    title: String
-    releaseYear: Int
 }

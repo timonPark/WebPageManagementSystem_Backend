@@ -18,7 +18,8 @@ public class MenuController {
 
   @GetMapping("/list")
   public ApiResponse<List<MenuResDto>> findAll() {
-    return ApiResponse.createSuccess(menuService.findAll());
+//    return ApiResponse.createSuccess(menuService.findAll());
+    return null;
   }
 
 }

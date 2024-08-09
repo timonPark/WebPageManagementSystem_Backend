@@ -1,0 +1,26 @@
+
+
+type Menu {
+    menuNo: ID
+    name: String
+    url: String
+    children: [Menu]
+    orderNo: Int
+    isManager: YNEnum
+    isUse: IsUseEnum
+    createdNo: Int
+    updatedNo: Int
+    createdAt: String
+    updatedAt: String
+}
+
+enum YNEnum {
+    Y,
+    N
+}
+
+enum IsUseEnum {
+    U
+    N
+    D
+}

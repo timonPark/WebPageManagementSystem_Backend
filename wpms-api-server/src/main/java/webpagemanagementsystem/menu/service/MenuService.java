@@ -1,9 +1,9 @@
 package webpagemanagementsystem.menu.service;
 
 import java.util.List;
-import webpagemanagementsystem.menu.dto.MenuResDto;
+import webpagemanagementsystem.menu.entity.Menu;
 
 public interface MenuService {
-  public List<MenuResDto> findAll();
+  public List<Menu> findAll();
 
 }
