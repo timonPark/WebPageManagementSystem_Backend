@@ -37,10 +37,11 @@ public class SecurityConfig {
             httpSecuritySessionManagementConfigurer.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
         )
         .authorizeHttpRequests(registry -> // api path
-            registry.requestMatchers("/user/**").permitAll()
-        )
-        .authorizeHttpRequests(registry -> // api path
-            registry.requestMatchers("/graphiql/**").permitAll()
+            registry.requestMatchers("/user/checkEmail/**").permitAll()
+                .requestMatchers("/user/signUp").permitAll()
+                .requestMatchers("/user/social/**").permitAll()
+                .requestMatchers("/user/login").permitAll()
+                .requestMatchers("/graphiql/**").permitAll()
         )
         .authorizeHttpRequests(registry ->
             registry.anyRequest().authenticated()) // 나머지 경로는 jwt 인증 해야함
