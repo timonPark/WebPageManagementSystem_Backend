@@ -131,4 +131,9 @@ public class UserServiceImple implements UserService{
       throw new AuthenticationFailException();
     }
   }
+
+  @Override
+  public GetUserResDto getUser(String email) {
+    return new GetUserResDto(findByEmailAndIsUseY(email));
+  }
 }

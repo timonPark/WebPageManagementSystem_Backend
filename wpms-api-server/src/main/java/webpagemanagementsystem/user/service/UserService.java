@@ -27,4 +27,6 @@ public interface UserService {
 
     public String login(LoginReqDto loginReqDto)
         throws NonJoinUserException, AuthenticationFailException;
+
+    public GetUserResDto getUser(String email);
 }
