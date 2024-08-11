@@ -46,4 +46,10 @@ public class UserController {
         throws AuthenticationFailException, NonJoinUserException {
         return ApiResponse.createSuccess(new AuthenticationSuccessfulDto(userService.login(loginReqDto)));
     }
+
+    @GetMapping("/getUser/{email}")
+    @ResponseStatus(HttpStatus.OK)
+    public ApiResponse<GetUserResDto> getUser(@PathVariable("email") String email) throws DuplicateEmailException {
+        return ApiResponse.createSuccess(userService.getUser(email));
+    }
 }
