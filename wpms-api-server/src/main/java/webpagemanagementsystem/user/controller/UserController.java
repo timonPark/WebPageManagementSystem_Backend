@@ -3,6 +3,8 @@ package webpagemanagementsystem.user.controller;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.web.bind.annotation.*;
 import webpagemanagementsystem.common.response.ApiResponse;
 import webpagemanagementsystem.user.dto.*;
@@ -47,9 +49,9 @@ public class UserController {
         return ApiResponse.createSuccess(new AuthenticationSuccessfulDto(userService.login(loginReqDto)));
     }
 
-    @GetMapping("/getUser/{email}")
+    @GetMapping("/getUser")
     @ResponseStatus(HttpStatus.OK)
-    public ApiResponse<GetUserResDto> getUser(@PathVariable("email") String email) throws DuplicateEmailException {
-        return ApiResponse.createSuccess(userService.getUser(email));
+    public ApiResponse<GetUserResDto> getUser( @AuthenticationPrincipal User user) throws DuplicateEmailException {
+        return ApiResponse.createSuccess(userService.getUser(user.getUsername()));
     }
 }
