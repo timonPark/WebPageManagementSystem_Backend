@@ -10,6 +10,13 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.io.Decoders;
+import io.jsonwebtoken.security.Keys;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -18,12 +25,19 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 import webpagemanagementsystem.common.entity.YNEnum;
 import webpagemanagementsystem.common.jwt.AccessTokenProvider;
+import webpagemanagementsystem.user.dto.GetUserResDto;
 import webpagemanagementsystem.user.dto.LoginReqDto;
 import webpagemanagementsystem.user.dto.SignUpReqDto;
 import webpagemanagementsystem.user.dto.SignUpResDto;
@@ -50,6 +64,12 @@ class UserControllerTest {
 
     @MockBean
     private AccessTokenProvider accessTokenProvider;
+
+    @MockBean
+    private Authentication authentication;
+
+    @MockBean
+    private SecurityContext securityContext;
 
     @Autowired
     private ObjectMapper objectMapper;
@@ -360,5 +380,57 @@ class UserControllerTest {
                 .andExpect(jsonPath("$.status").value("success"))
                 .andExpect(jsonPath("$.data.accessToken").value(accessToken))
                 .andExpect(jsonPath("$.message").isEmpty());
+    }
+
+    @DisplayName("계정 상세조회 실패 - 헤더 토큰 없을 경우")
+    @Test
+    public void test13() throws Exception {
+        // when
+        mvc.perform(
+            post("/user/getUser")
+
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON)
+        ).andExpect(status().is4xxClientError());
+    }
+
+    @DisplayName("계정 상세조회 성공")
+    @Test
+    public void test14() throws Exception {
+        //given
+        String accessToken = "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJtMDUyMTQ2QG5hdmVyLmNvbSIsImF1dGgiOiJVU0VSIiwiZXhwIjoxNzIzNTY0NzQ3fQ.1zit3R7wQPmP2qvxykjNiMbxPIxfNKJTsA8NVsraoscjlT3Hac0Ob0HRjGecBBkhLTvY4nHx8JIjLBXbl_V1ug";
+        GrantedAuthority authority = new SimpleGrantedAuthority("ROLE_USER");
+        User mockUser = new User("m052146@naver.com", "password", Collections.singletonList(authority));
+
+        when(authentication.getPrincipal()).thenReturn(mockUser);
+        when(securityContext.getAuthentication()).thenReturn(authentication);
+        SecurityContextHolder.setContext(securityContext);
+
+        GetUserResDto userResDto = new GetUserResDto(
+            Users.builder()
+                .userNo(3L)
+                .name("박준영")
+                .email("m052146@naver.com")
+                .isSocial(YNEnum.N)
+                .build()
+        );
+        when(userService.getUser(any(String.class))).thenReturn(userResDto);
+
+        // when
+        mvc.perform(
+                get("/user/getUser")
+                    .header("Authorization", "Bearer " + accessToken)
+                    .contentType(MediaType.APPLICATION_JSON)
+            ).andExpect(status().is2xxSuccessful())
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+            .andExpect(jsonPath("$.status").value("success"))
+            .andExpect(jsonPath("$.data.userNo").value(userResDto.getUserNo()))
+            .andExpect(jsonPath("$.data.name").value(userResDto.getName()))
+            .andExpect(jsonPath("$.data.email").value(userResDto.getEmail()))
+            .andExpect(jsonPath("$.data.isSocial").value(userResDto.getIsSocial().toString()))
+            .andExpect(jsonPath("$.data.socialId").isEmpty())
+            .andExpect(jsonPath("$.data.socialType").isEmpty())
+            .andExpect(jsonPath("$.data.picture").isEmpty())
+            .andExpect(jsonPath("$.message").isEmpty());
     }
 }
