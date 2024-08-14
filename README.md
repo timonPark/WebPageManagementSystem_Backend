@@ -36,3 +36,6 @@ query showQuery($titleFilter: String){
   "titleFilter": "is"
 }
 ```
+
+## 로그 파일 관련
+[로컬 로그 파일 가이드](https://locrian-gerbil-117.notion.site/Spring-boot-e5ec541ba3c44cd583a28924cae31cc3)
