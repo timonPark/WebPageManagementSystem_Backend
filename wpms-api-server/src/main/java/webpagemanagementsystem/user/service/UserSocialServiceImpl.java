@@ -3,6 +3,9 @@ package webpagemanagementsystem.user.service;
 import java.net.URI;
 import java.util.Map;
 import java.util.NoSuchElementException;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -27,7 +30,7 @@ import webpagemanagementsystem.user.exception.SocialUnauthorizedException;
 
 @Service
 public class UserSocialServiceImpl implements  UserSocialService{
-
+  Logger logger = LoggerFactory.getLogger("webpagemanagementsystem.user.service.UserSocialServiceImpl");
   public UserSocialServiceImpl(
       AccessTokenProvider accessTokenProvider,
       AuthenticationManagerBuilder authenticationManagerBuilder,
@@ -81,7 +84,9 @@ public class UserSocialServiceImpl implements  UserSocialService{
     try {
       return (new RestTemplate().exchange(uri, HttpMethod.GET, new HttpEntity<>(headers), socialInfoType)).getBody();
     } catch (HttpClientErrorException e) {
-      throw new SocialUnauthorizedException(provider, accessToken);
+      var exception = new SocialUnauthorizedException(provider, accessToken);
+      logger.error(exception.getMessage());
+      throw exception;
     }
 
   }
