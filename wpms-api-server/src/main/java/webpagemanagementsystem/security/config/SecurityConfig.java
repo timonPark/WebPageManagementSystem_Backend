@@ -42,6 +42,8 @@ public class SecurityConfig {
                 .requestMatchers("/user/social/**").permitAll()
                 .requestMatchers("/user/login").permitAll()
                 .requestMatchers("/graphiql/**").permitAll()
+                .requestMatchers("/api/actuator/**").permitAll()
+                .requestMatchers("/actuator/**").permitAll()
         )
         .authorizeHttpRequests(registry ->
             registry.anyRequest().authenticated()) // 나머지 경로는 jwt 인증 해야함
