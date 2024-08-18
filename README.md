@@ -17,8 +17,7 @@
 - API Testing Tool: Postman
 
 ## API 문서
-[소셜 로그인](https://github.com/timonPark/WebPageManagementSystem_Backend/tree/master/wiki/user/README.md)
-[로그인]
+[소셜로그인](https://github.com/timonPark/WebPageManagementSystem_Backend/wiki/Users#%EC%86%8C%EC%85%9C%EB%A1%9C%EA%B7%B8%EC%9D%B8)
 
 ## graphql Example
 1. 브라우저에 http://localhost:8080/graphiql를 넣으세요
