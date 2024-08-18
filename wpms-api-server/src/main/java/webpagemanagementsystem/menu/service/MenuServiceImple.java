@@ -5,7 +5,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import webpagemanagementsystem.menu.entity.Menu;
 import webpagemanagementsystem.menu.repository.MenuRepository;
-import webpagemanagementsystem.menu.type.MenuType;
 
 @Service
 @RequiredArgsConstructor
@@ -18,37 +17,13 @@ public class MenuServiceImple implements MenuService{
     return menuRepository.findAll();
   }
 
-  public List<MenuType> convertMenuToMenuResDto(List<Menu> menus) {
-    return menus.stream().map(
-                        menu -> new MenuType(
-                            menu.getMenuNo(),
-                            menu.getName(),
-                            menu.getUrl(),
-                            menu.getChildren().stream().map(this::convertMenuToMenuType).toList(),
-                            menu.getOrderNo(),
-                            menu.getIsManager(),
-                            menu.getIsUse(),
-                            menu.getCreatedNo(),
-                            menu.getUpdatedNo(),
-                            menu.getCreatedAt(),
-                            menu.getUpdatedAt()
-                        )
-    ).toList();
+  @Override
+  public Menu createMenu() {
+    return null;
   }
 
-  private MenuType convertMenuToMenuType(Menu menu){
-    return new MenuType(
-        menu.getMenuNo(),
-        menu.getName(),
-        menu.getUrl(),
-        menu.getChildren().stream().map(this::convertMenuToMenuType).toList(),
-        menu.getOrderNo(),
-        menu.getIsManager(),
-        menu.getIsUse(),
-        menu.getCreatedNo(),
-        menu.getUpdatedNo(),
-        menu.getCreatedAt(),
-        menu.getUpdatedAt()
-    );
+  @Override
+  public Menu updateMenu(Menu menu) {
+    return null;
   }
 }
