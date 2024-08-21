@@ -24,9 +24,4 @@ public class MenuDataFetcher {
     }
   }
 
-  @DgsMutation
-  public ApiResponseFormat<String> createMenus(){
-    return null;
-  }
-
 }

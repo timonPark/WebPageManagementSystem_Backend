@@ -14,6 +14,12 @@ type Menu {
     updatedAt: String
 }
 
+type MenuResponseFormat {
+    statusCode: String
+    data: [Menu]
+    message: String
+}
+
 enum YNEnum {
     Y,
     N

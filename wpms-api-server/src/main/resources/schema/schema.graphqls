@@ -1,4 +1,4 @@
 type Query {
-    menus: [Menu]
+    menus: MenuResponseFormat
     shows(titleFilter: String): [Show]
 }
