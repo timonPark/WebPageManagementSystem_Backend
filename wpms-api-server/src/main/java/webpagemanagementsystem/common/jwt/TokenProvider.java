@@ -10,12 +10,15 @@ import io.jsonwebtoken.security.Keys;
 import java.security.Key;
 import java.util.Arrays;
 import java.util.Collection;
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
+import webpagemanagementsystem.security.CustomUserDetailsService;
 
 @Slf4j
 public class TokenProvider {
@@ -24,6 +27,8 @@ public class TokenProvider {
   protected final String secret;
   protected final long tokenValidityInMilliseconds;
   protected Key key;
+  @Setter
+  private CustomUserDetailsService customUserDetailsService;
 
   public TokenProvider(String secret, long tokenValidityInMilliseconds) {
     this.secret = secret;
@@ -48,8 +53,8 @@ public class TokenProvider {
 
     // 디비를 거치지 않고 토큰에서 값을 꺼내 바로 시큐리티 유저 객체를 만들어 Authentication을 만들어 반환하기에 유저네임, 권한 외 정보는 알 수 없다.
     User principal = new User(claims.getSubject(), "", authorities);
-
-    return new UsernamePasswordAuthenticationToken(principal, token, authorities);
+    UserDetails userDetails = customUserDetailsService.loadUserByUsername(principal.getUsername());
+    return new UsernamePasswordAuthenticationToken(userDetails, token, authorities);
   }
 
   // 토큰 유효성 검사

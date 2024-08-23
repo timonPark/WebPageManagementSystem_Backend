@@ -14,6 +14,19 @@ type Menu {
     updatedAt: String
 }
 
+input CreateMenuReqDto {
+    name: String
+    url: String
+    orderNo: Int
+    isManager: YNEnum
+}
+
+type CreateMenuResponseFormat {
+    statusCode: String
+    data: Menu
+    message: String
+}
+
 type MenuResponseFormat {
     statusCode: String
     data: [Menu]

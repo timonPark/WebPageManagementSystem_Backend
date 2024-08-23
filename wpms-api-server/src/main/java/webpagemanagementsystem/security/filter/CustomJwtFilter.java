@@ -15,6 +15,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 import org.springframework.web.filter.GenericFilterBean;
 import webpagemanagementsystem.common.jwt.AccessTokenProvider;
+import webpagemanagementsystem.security.CustomUserDetailsService;
 
 
 @Component
@@ -26,6 +27,8 @@ public class CustomJwtFilter extends GenericFilterBean {
   public static final String AUTHORIZATION_HEADER = "Authorization";
 
   private final AccessTokenProvider accessTokenProvider;
+
+  private final CustomUserDetailsService customUserDetailsService;
 
   // 실제 필터링 로직은 doFilter 안에 들어가게 된다. GenericFilterBean을 받아 구현
   // Dofilter는 토큰의 인증정보를 SecurityContext 안에 저장하는 역할 수행
@@ -40,6 +43,7 @@ public class CustomJwtFilter extends GenericFilterBean {
 
     // 유효성 검증
     if (StringUtils.hasText(jwt) && accessTokenProvider.validateToken(jwt)) {
+      accessTokenProvider.setCustomUserDetailsService(customUserDetailsService);
       // 토큰에서 유저네임, 권한을 뽑아 스프링 시큐리티 유저를 만들어 Authentication 반환
       Authentication authentication = accessTokenProvider.getAuthentication(jwt);
       // 해당 스프링 시큐리티 유저를 시큐리티 건텍스트에 저장, 즉 디비를 거치지 않음
