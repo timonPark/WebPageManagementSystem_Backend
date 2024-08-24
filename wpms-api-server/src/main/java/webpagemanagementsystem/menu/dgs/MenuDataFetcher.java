@@ -7,9 +7,8 @@ import com.netflix.graphql.dgs.DgsQuery;
 import graphql.schema.DataFetchingEnvironment;
 import java.util.List;
 import org.springframework.http.HttpStatus;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.userdetails.UserDetails;
 import webpagemanagementsystem.common.graphql.ApiResponseFormat;
+import webpagemanagementsystem.common.graphql.DgsAuthentication;
 import webpagemanagementsystem.common.graphql.MutationInputConvert;
 import webpagemanagementsystem.menu.dto.CreateMenuReqDto;
 import webpagemanagementsystem.menu.entity.Menu;
@@ -21,10 +20,12 @@ public class MenuDataFetcher {
   private final MenuService menuService;
   private final ObjectMapper objectMapper;
   private final MutationInputConvert<CreateMenuReqDto> mutationInputConvert;
-  public MenuDataFetcher(MenuService menuService, ObjectMapper objectMapper) {
+  private final DgsAuthentication dgsAuthentication;
+  public MenuDataFetcher(MenuService menuService, ObjectMapper objectMapper, DgsAuthentication dgsAuthentication) {
     this.menuService = menuService;
     this.objectMapper = objectMapper;
     this.mutationInputConvert = new MutationInputConvert<>();
+    this.dgsAuthentication = dgsAuthentication;
   }
 
   @DgsQuery
@@ -37,10 +38,16 @@ public class MenuDataFetcher {
   }
 
   @DgsMutation
-  public ApiResponseFormat<Menu> createMenu(@AuthenticationPrincipal UserDetails userDetails, DataFetchingEnvironment dataFetchingEnvironment){
-    CreateMenuReqDto createMenuReqDto = mutationInputConvert.convert(dataFetchingEnvironment, objectMapper, CreateMenuReqDto.class);
+  public ApiResponseFormat<Menu> createMenu(DataFetchingEnvironment dfe){
+    CreateMenuReqDto createMenuReqDto = mutationInputConvert.convert(dfe, objectMapper, CreateMenuReqDto.class);
     try {
-      return ApiResponseFormat.success(HttpStatus.OK, this.menuService.createMenu(createMenuReqDto));
+      return ApiResponseFormat.success(
+          HttpStatus.OK,
+          this.menuService.createMenu(
+              createMenuReqDto,
+              this.dgsAuthentication.convertAuthenticationToUser(dfe)
+          )
+      );
     } catch (Exception e) {
       return ApiResponseFormat.error(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
     }
