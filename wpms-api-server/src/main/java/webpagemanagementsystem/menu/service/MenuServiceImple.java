@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import webpagemanagementsystem.menu.dto.CreateMenuReqDto;
 import webpagemanagementsystem.menu.entity.Menu;
 import webpagemanagementsystem.menu.repository.MenuRepository;
+import webpagemanagementsystem.user.entity.Users;
 
 @Service
 @RequiredArgsConstructor
@@ -19,8 +20,8 @@ public class MenuServiceImple implements MenuService{
   }
 
   @Override
-  public Menu createMenu(CreateMenuReqDto createMenuReqDto) {
-    return menuRepository.save(this.convertCreateMenuReqDtoToMenu(createMenuReqDto));
+  public Menu createMenu(CreateMenuReqDto createMenuReqDto, Users user) {
+    return menuRepository.save(this.convertCreateMenuReqDtoToMenu(createMenuReqDto, user));
   }
 
   @Override
@@ -28,12 +29,15 @@ public class MenuServiceImple implements MenuService{
     return null;
   }
 
-  private Menu convertCreateMenuReqDtoToMenu(CreateMenuReqDto createMenuReqDto) {
-    return Menu.builder()
+  private Menu convertCreateMenuReqDtoToMenu(CreateMenuReqDto createMenuReqDto, Users user) {
+    Menu menu = Menu.builder()
         .name(createMenuReqDto.getName())
         .url(createMenuReqDto.getUrl())
         .orderNo(createMenuReqDto.getOrderNo())
         .isManager(createMenuReqDto.getIsManager())
         .build();
+    menu.setCreatedNo(user.getUserNo());
+    menu.setUpdatedNo(user.getUserNo());
+    return menu;
   }
 }
