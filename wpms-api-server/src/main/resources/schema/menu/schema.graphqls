@@ -21,10 +21,28 @@ input CreateMenuReqDto {
     isManager: YNEnum
 }
 
+input UpdateMenuReqDto {
+    menuNo: Int
+    name: String
+    url: String
+    orderNo: Int
+    isManager: YNEnum
+}
+
 type CreateMenuResponseFormat {
     statusCode: String
     data: Menu
     message: String
+}
+
+type UpdateMenuResponseFormat {
+    statusCode: String
+    data: UpdateMenuResponse
+    message: String
+}
+
+type UpdateMenuResponse {
+    result: Boolean
 }
 
 type MenuResponseFormat {
