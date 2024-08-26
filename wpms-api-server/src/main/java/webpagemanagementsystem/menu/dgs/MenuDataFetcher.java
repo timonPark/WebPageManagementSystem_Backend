@@ -1,6 +1,5 @@
 package webpagemanagementsystem.menu.dgs;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.netflix.graphql.dgs.DgsComponent;
 import com.netflix.graphql.dgs.DgsMutation;
 import com.netflix.graphql.dgs.DgsQuery;
@@ -10,7 +9,6 @@ import java.util.List;
 import org.springframework.http.HttpStatus;
 import webpagemanagementsystem.common.graphql.ApiResponseFormat;
 import webpagemanagementsystem.common.graphql.DgsAuthentication;
-import webpagemanagementsystem.common.graphql.MutationInputConvert;
 import webpagemanagementsystem.menu.dto.CreateMenuReqDto;
 import webpagemanagementsystem.menu.dto.UpdateMenuReqDto;
 import webpagemanagementsystem.menu.dto.UpdateMenuResponseDto;
@@ -21,13 +19,9 @@ import webpagemanagementsystem.menu.service.MenuService;
 
 public class MenuDataFetcher {
   private final MenuService menuService;
-  private final ObjectMapper objectMapper;
-  private final MutationInputConvert<CreateMenuReqDto> mutationInputConvert;
   private final DgsAuthentication dgsAuthentication;
-  public MenuDataFetcher(MenuService menuService, ObjectMapper objectMapper, DgsAuthentication dgsAuthentication) {
+  public MenuDataFetcher(MenuService menuService, DgsAuthentication dgsAuthentication) {
     this.menuService = menuService;
-    this.objectMapper = objectMapper;
-    this.mutationInputConvert = new MutationInputConvert<>();
     this.dgsAuthentication = dgsAuthentication;
   }
 
