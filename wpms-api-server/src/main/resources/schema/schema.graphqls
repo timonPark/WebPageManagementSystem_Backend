@@ -6,5 +6,7 @@ type Query {
 type Mutation {
     createMenu(input: CreateMenuReqDto): CreateMenuResponseFormat
     updateMenu(input: UpdateMenuReqDto): UpdateMenuResponseFormat
+    deleteMenu(input: IsUseMenuReqDto): IsUseMenuResponseFormat
+    unUseMenu(input: IsUseMenuReqDto): IsUseMenuResponseFormat
 }
 
