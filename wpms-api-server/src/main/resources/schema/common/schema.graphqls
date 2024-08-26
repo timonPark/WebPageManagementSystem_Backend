@@ -1,0 +1,10 @@
+enum YNEnum {
+    Y,
+    N
+}
+
+enum IsUseEnum {
+    U
+    N
+    D
+}

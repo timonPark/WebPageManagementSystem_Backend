@@ -10,6 +10,8 @@ import org.springframework.http.HttpStatus;
 import webpagemanagementsystem.common.graphql.ApiResponseFormat;
 import webpagemanagementsystem.common.graphql.DgsAuthentication;
 import webpagemanagementsystem.menu.dto.CreateMenuReqDto;
+import webpagemanagementsystem.menu.dto.IsUseMenuReqDto;
+import webpagemanagementsystem.menu.dto.IsUseMenuResponseDto;
 import webpagemanagementsystem.menu.dto.UpdateMenuReqDto;
 import webpagemanagementsystem.menu.dto.UpdateMenuResponseDto;
 import webpagemanagementsystem.menu.entity.Menu;
@@ -54,6 +56,18 @@ public class MenuDataFetcher {
   public ApiResponseFormat<UpdateMenuResponseDto> updateMenu(DataFetchingEnvironment dfe,
       @InputArgument UpdateMenuReqDto input){
     return this.menuService.updateMenu(input, this.dgsAuthentication.convertAuthenticationToUser(dfe));
+  }
+
+  @DgsMutation
+  public ApiResponseFormat<IsUseMenuResponseDto> unUseMenu(DataFetchingEnvironment dfe,
+      @InputArgument IsUseMenuReqDto input){
+    return this.menuService.unUseMenu(input, this.dgsAuthentication.convertAuthenticationToUser(dfe));
+  }
+
+  @DgsMutation
+  public ApiResponseFormat<IsUseMenuResponseDto> deleteMenu(DataFetchingEnvironment dfe,
+      @InputArgument IsUseMenuReqDto input){
+    return this.menuService.deleteMenu(input, this.dgsAuthentication.convertAuthenticationToUser(dfe));
   }
 
 }

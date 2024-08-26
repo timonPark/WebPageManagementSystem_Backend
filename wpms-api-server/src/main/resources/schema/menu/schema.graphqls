@@ -29,6 +29,10 @@ input UpdateMenuReqDto {
     isManager: YNEnum
 }
 
+input IsUseMenuReqDto {
+    menuNo: Int
+}
+
 type CreateMenuResponseFormat {
     statusCode: String
     data: Menu
@@ -41,7 +45,17 @@ type UpdateMenuResponseFormat {
     message: String
 }
 
+type IsUseMenuResponseFormat {
+    statusCode: String
+    data: IsUseMenuResponse
+    message: String
+}
+
 type UpdateMenuResponse {
+    result: Boolean
+}
+
+type IsUseMenuResponse {
     result: Boolean
 }
 
@@ -49,15 +63,4 @@ type MenuResponseFormat {
     statusCode: String
     data: [Menu]
     message: String
-}
-
-enum YNEnum {
-    Y,
-    N
-}
-
-enum IsUseEnum {
-    U
-    N
-    D
 }
