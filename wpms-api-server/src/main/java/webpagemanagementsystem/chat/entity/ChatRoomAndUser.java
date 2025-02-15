@@ -3,9 +3,7 @@ package webpagemanagementsystem.chat.entity;
 import jakarta.persistence.*;
 import lombok.*;
 import webpagemanagementsystem.common.entity.BaseEntity;
-import webpagemanagementsystem.menu.entity.Menu;
-
-import java.util.List;
+import webpagemanagementsystem.user.entity.Users;
 
 @Entity
 @Getter
@@ -18,6 +16,13 @@ public class ChatRoomAndUser extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long chatRoomAndUserNo;
 
-    @OneToMany(mappedBy = "parent", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Menu> children;
+    // ChatRoom과의 관계 설정
+    @ManyToOne
+    @JoinColumn(name = "chat_room_no")
+    private ChatRoom chatRoom;
+
+    // User와의 관계 설정 (OneToMany -> ManyToOne으로 수정)
+    @ManyToOne
+    @JoinColumn(name = "user_no")
+    private Users user;
 }
