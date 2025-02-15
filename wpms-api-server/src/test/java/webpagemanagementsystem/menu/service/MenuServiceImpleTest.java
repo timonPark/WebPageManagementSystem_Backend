@@ -16,10 +16,6 @@ import webpagemanagementsystem.common.entity.YNEnum;
 import webpagemanagementsystem.menu.entity.Menu;
 import webpagemanagementsystem.menu.repository.MenuRepository;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.BDDMockito.given;
-
 @SpringBootTest
 class MenuServiceImpleTest {
 

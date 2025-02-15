@@ -10,7 +10,6 @@ import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
-
 @Getter
 @MappedSuperclass
 @Setter
@@ -18,13 +17,12 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 public class BaseTimeEntity {
 
     @Column(nullable = false, insertable = false, updatable = false,
-        columnDefinition = "datatime default CURRENT_TIMESTAMP")
+        columnDefinition = "timestamp default CURRENT_TIMESTAMP")
     @CreatedDate
     private LocalDateTime createdAt;
 
     @Column(nullable = false, insertable = false, updatable = false,
-        columnDefinition = "datatime default CURRENT_TIMESTAMP on update CURRENT_TIMESTAMP")
+        columnDefinition = "timestamp default CURRENT_TIMESTAMP")
     @LastModifiedDate
     private LocalDateTime updatedAt;
-
 }

@@ -7,12 +7,15 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
+import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.ColumnDefault;
+import webpagemanagementsystem.chat.entity.ChatRoomAndUser;
 import webpagemanagementsystem.common.entity.BaseTimeEntity;
 import webpagemanagementsystem.common.entity.IsUseEnum;
 import webpagemanagementsystem.common.entity.YNEnum;
@@ -58,4 +61,7 @@ public class Users extends BaseTimeEntity {
     @Enumerated(EnumType.STRING)
     private IsUseEnum isUse;
 
+    // User와 ChatRoomAndUser 간의 관계 설정 (OneToMany)
+    @OneToMany(mappedBy = "user")
+    private List<ChatRoomAndUser> chatRoomAndUsers;
 }
